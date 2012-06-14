@@ -18,6 +18,14 @@
 		703E514C158A8AFA0092B497 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E5133158A8AFA0092B497 /* Foundation.framework */; };
 		703E5154158A8AFA0092B497 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 703E5152158A8AFA0092B497 /* InfoPlist.strings */; };
 		703E5157158A8AFA0092B497 /* AccordionTableView2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E5156158A8AFA0092B497 /* AccordionTableView2Tests.m */; };
+		703E5161158A8B610092B497 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 703E5160158A8B610092B497 /* MainWindow.xib */; };
+		703E5162158A8B610092B497 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 703E5160158A8B610092B497 /* MainWindow.xib */; };
+		703E5167158A8C000092B497 /* AccordionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E5165158A8C000092B497 /* AccordionTableViewController.m */; };
+		703E5168158A8C000092B497 /* AccordionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E5165158A8C000092B497 /* AccordionTableViewController.m */; };
+		703E5169158A8C000092B497 /* AccordionTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 703E5166158A8C000092B497 /* AccordionTableViewController.xib */; };
+		703E516A158A8C000092B497 /* AccordionTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 703E5166158A8C000092B497 /* AccordionTableViewController.xib */; };
+		703E516C158A8D150092B497 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E516B158A8D150092B497 /* GLKit.framework */; };
+		703E516D158A8D210092B497 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E516B158A8D150092B497 /* GLKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,18 +43,23 @@
 		703E5131158A8AFA0092B497 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		703E5133158A8AFA0092B497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		703E5135158A8AFA0092B497 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		703E5139158A8AFA0092B497 /* AccordionTableView2-Info.plist */ = {isa = PBXFileReference; path = "AccordionTableView2-Info.plist"; sourceTree = "<group>"; };
+		703E5139158A8AFA0092B497 /* AccordionTableView2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AccordionTableView2-Info.plist"; sourceTree = "<group>"; };
 		703E513B158A8AFA0092B497 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		703E513D158A8AFA0092B497 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		703E513F158A8AFA0092B497 /* AccordionTableView2-Prefix.pch */ = {isa = PBXFileReference; path = "AccordionTableView2-Prefix.pch"; sourceTree = "<group>"; };
-		703E5140158A8AFA0092B497 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		703E513F158A8AFA0092B497 /* AccordionTableView2-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AccordionTableView2-Prefix.pch"; sourceTree = "<group>"; };
+		703E5140158A8AFA0092B497 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		703E5141158A8AFA0092B497 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		703E5148158A8AFA0092B497 /* AccordionTableView2Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AccordionTableView2Tests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		703E5149158A8AFA0092B497 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		703E5151158A8AFA0092B497 /* AccordionTableView2Tests-Info.plist */ = {isa = PBXFileReference; path = "AccordionTableView2Tests-Info.plist"; sourceTree = "<group>"; };
+		703E5151158A8AFA0092B497 /* AccordionTableView2Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AccordionTableView2Tests-Info.plist"; sourceTree = "<group>"; };
 		703E5153158A8AFA0092B497 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		703E5155158A8AFA0092B497 /* AccordionTableView2Tests.h */ = {isa = PBXFileReference; path = AccordionTableView2Tests.h; sourceTree = "<group>"; };
+		703E5155158A8AFA0092B497 /* AccordionTableView2Tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccordionTableView2Tests.h; sourceTree = "<group>"; };
 		703E5156158A8AFA0092B497 /* AccordionTableView2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccordionTableView2Tests.m; sourceTree = "<group>"; };
+		703E5160158A8B610092B497 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		703E5164158A8C000092B497 /* AccordionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccordionTableViewController.h; sourceTree = "<group>"; };
+		703E5165158A8C000092B497 /* AccordionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccordionTableViewController.m; sourceTree = "<group>"; };
+		703E5166158A8C000092B497 /* AccordionTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccordionTableViewController.xib; sourceTree = "<group>"; };
+		703E516B158A8D150092B497 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				703E516C158A8D150092B497 /* GLKit.framework in Frameworks */,
 				703E5132158A8AFA0092B497 /* UIKit.framework in Frameworks */,
 				703E5134158A8AFA0092B497 /* Foundation.framework in Frameworks */,
 				703E5136158A8AFA0092B497 /* CoreGraphics.framework in Frameworks */,
@@ -67,6 +81,7 @@
 				703E514A158A8AFA0092B497 /* SenTestingKit.framework in Frameworks */,
 				703E514B158A8AFA0092B497 /* UIKit.framework in Frameworks */,
 				703E514C158A8AFA0092B497 /* Foundation.framework in Frameworks */,
+				703E516D158A8D210092B497 /* GLKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +110,7 @@
 		703E5130158A8AFA0092B497 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				703E516B158A8D150092B497 /* GLKit.framework */,
 				703E5131158A8AFA0092B497 /* UIKit.framework */,
 				703E5133158A8AFA0092B497 /* Foundation.framework */,
 				703E5135158A8AFA0092B497 /* CoreGraphics.framework */,
@@ -106,9 +122,11 @@
 		703E5137158A8AFA0092B497 /* AccordionTableView2 */ = {
 			isa = PBXGroup;
 			children = (
+				703E5163158A8BD80092B497 /* AccordionTableView */,
 				703E5140158A8AFA0092B497 /* AppDelegate.h */,
 				703E5141158A8AFA0092B497 /* AppDelegate.m */,
 				703E5138158A8AFA0092B497 /* Supporting Files */,
+				703E5160158A8B610092B497 /* MainWindow.xib */,
 			);
 			path = AccordionTableView2;
 			sourceTree = "<group>";
@@ -141,6 +159,16 @@
 				703E5152158A8AFA0092B497 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		703E5163158A8BD80092B497 /* AccordionTableView */ = {
+			isa = PBXGroup;
+			children = (
+				703E5164158A8C000092B497 /* AccordionTableViewController.h */,
+				703E5165158A8C000092B497 /* AccordionTableViewController.m */,
+				703E5166158A8C000092B497 /* AccordionTableViewController.xib */,
+			);
+			name = AccordionTableView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,6 +242,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				703E513C158A8AFA0092B497 /* InfoPlist.strings in Resources */,
+				703E5161158A8B610092B497 /* MainWindow.xib in Resources */,
+				703E5169158A8C000092B497 /* AccordionTableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +252,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				703E5154158A8AFA0092B497 /* InfoPlist.strings in Resources */,
+				703E5162158A8B610092B497 /* MainWindow.xib in Resources */,
+				703E516A158A8C000092B497 /* AccordionTableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +282,7 @@
 			files = (
 				703E513E158A8AFA0092B497 /* main.m in Sources */,
 				703E5142158A8AFA0092B497 /* AppDelegate.m in Sources */,
+				703E5167158A8C000092B497 /* AccordionTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				703E5157158A8AFA0092B497 /* AccordionTableView2Tests.m in Sources */,
+				703E5168158A8C000092B497 /* AccordionTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +379,7 @@
 				GCC_PREFIX_HEADER = "AccordionTableView2/AccordionTableView2-Prefix.pch";
 				INFOPLIST_FILE = "AccordionTableView2/AccordionTableView2-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -356,6 +391,7 @@
 				GCC_PREFIX_HEADER = "AccordionTableView2/AccordionTableView2-Prefix.pch";
 				INFOPLIST_FILE = "AccordionTableView2/AccordionTableView2-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  AccordionTableViewViewController.h
 //  AccordionTableView2
 //
 //  Created by Tyler Casselman on 6/14/12.
@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GLKit/GLKit.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) IBOutlet UIWindow *window;
+@interface AccordionTableViewController : GLKViewController
 
 @end

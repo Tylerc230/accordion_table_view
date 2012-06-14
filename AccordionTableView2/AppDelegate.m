@@ -7,17 +7,19 @@
 //
 
 #import "AppDelegate.h"
+#import "AccordionTableViewController.h"
 
+@interface AppDelegate ()
+@property (nonatomic, strong) AccordionTableViewController *accordionTableView;
+@end
 @implementation AppDelegate
-
+@synthesize accordionTableView;
 @synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+    self.accordionTableView = [[AccordionTableViewController alloc] init];
+    [self.window addSubview:self.accordionTableView.view];
     return YES;
 }
 
