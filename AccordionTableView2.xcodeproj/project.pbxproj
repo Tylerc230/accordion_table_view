@@ -26,6 +26,15 @@
 		703E516A158A8C000092B497 /* AccordionTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 703E5166158A8C000092B497 /* AccordionTableViewController.xib */; };
 		703E516C158A8D150092B497 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E516B158A8D150092B497 /* GLKit.framework */; };
 		703E516D158A8D210092B497 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E516B158A8D150092B497 /* GLKit.framework */; };
+		703E5170158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
+		703E5171158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
+		703E5185158A9B8B0092B497 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E5184158A9B8B0092B497 /* OpenGLES.framework */; };
+		703E5188158A9CB00092B497 /* Shader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 703E5186158A9CAF0092B497 /* Shader.fsh */; };
+		703E5189158A9CB00092B497 /* Shader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 703E5186158A9CAF0092B497 /* Shader.fsh */; };
+		703E518A158A9CB00092B497 /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 703E5187158A9CB00092B497 /* Shader.vsh */; };
+		703E518B158A9CB00092B497 /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 703E5187158A9CB00092B497 /* Shader.vsh */; };
+		703E5190158A9F100092B497 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 703E5186158A9CAF0092B497 /* Shader.fsh */; };
+		703E5191158A9F100092B497 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 703E5187158A9CB00092B497 /* Shader.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +69,11 @@
 		703E5165158A8C000092B497 /* AccordionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccordionTableViewController.m; sourceTree = "<group>"; };
 		703E5166158A8C000092B497 /* AccordionTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccordionTableViewController.xib; sourceTree = "<group>"; };
 		703E516B158A8D150092B497 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		703E516E158A8E770092B497 /* AccordionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccordionModel.h; sourceTree = "<group>"; };
+		703E516F158A8E770092B497 /* AccordionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccordionModel.m; sourceTree = "<group>"; };
+		703E5184158A9B8B0092B497 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		703E5186158A9CAF0092B497 /* Shader.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Shader.fsh; sourceTree = "<group>"; };
+		703E5187158A9CB00092B497 /* Shader.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Shader.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				703E5185158A9B8B0092B497 /* OpenGLES.framework in Frameworks */,
 				703E516C158A8D150092B497 /* GLKit.framework in Frameworks */,
 				703E5132158A8AFA0092B497 /* UIKit.framework in Frameworks */,
 				703E5134158A8AFA0092B497 /* Foundation.framework in Frameworks */,
@@ -110,6 +125,7 @@
 		703E5130158A8AFA0092B497 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				703E5184158A9B8B0092B497 /* OpenGLES.framework */,
 				703E516B158A8D150092B497 /* GLKit.framework */,
 				703E5131158A8AFA0092B497 /* UIKit.framework */,
 				703E5133158A8AFA0092B497 /* Foundation.framework */,
@@ -164,9 +180,13 @@
 		703E5163158A8BD80092B497 /* AccordionTableView */ = {
 			isa = PBXGroup;
 			children = (
+				703E5186158A9CAF0092B497 /* Shader.fsh */,
+				703E5187158A9CB00092B497 /* Shader.vsh */,
 				703E5164158A8C000092B497 /* AccordionTableViewController.h */,
 				703E5165158A8C000092B497 /* AccordionTableViewController.m */,
 				703E5166158A8C000092B497 /* AccordionTableViewController.xib */,
+				703E516E158A8E770092B497 /* AccordionModel.h */,
+				703E516F158A8E770092B497 /* AccordionModel.m */,
 			);
 			name = AccordionTableView;
 			sourceTree = "<group>";
@@ -241,6 +261,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				703E5190158A9F100092B497 /* Shader.fsh in Resources */,
+				703E5191158A9F100092B497 /* Shader.vsh in Resources */,
 				703E513C158A8AFA0092B497 /* InfoPlist.strings in Resources */,
 				703E5161158A8B610092B497 /* MainWindow.xib in Resources */,
 				703E5169158A8C000092B497 /* AccordionTableViewController.xib in Resources */,
@@ -283,6 +305,9 @@
 				703E513E158A8AFA0092B497 /* main.m in Sources */,
 				703E5142158A8AFA0092B497 /* AppDelegate.m in Sources */,
 				703E5167158A8C000092B497 /* AccordionTableViewController.m in Sources */,
+				703E5170158A8E770092B497 /* AccordionModel.m in Sources */,
+				703E5188158A9CB00092B497 /* Shader.fsh in Sources */,
+				703E518A158A9CB00092B497 /* Shader.vsh in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +317,9 @@
 			files = (
 				703E5157158A8AFA0092B497 /* AccordionTableView2Tests.m in Sources */,
 				703E5168158A8C000092B497 /* AccordionTableViewController.m in Sources */,
+				703E5171158A8E770092B497 /* AccordionModel.m in Sources */,
+				703E5189158A9CB00092B497 /* Shader.fsh in Sources */,
+				703E518B158A9CB00092B497 /* Shader.vsh in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +477,7 @@
 				703E515C158A8AFA0092B497 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		703E515D158A8AFA0092B497 /* Build configuration list for PBXNativeTarget "AccordionTableView2Tests" */ = {
 			isa = XCConfigurationList;
@@ -457,6 +486,7 @@
 				703E515F158A8AFA0092B497 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
