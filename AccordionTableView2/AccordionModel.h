@@ -13,4 +13,5 @@
 @property (nonatomic, readonly) unsigned int vertexBufferSize;
 @property (nonatomic, readonly) GLushort *indicies;
 @property (nonatomic, readonly) unsigned int indexBufferSize;
+@property (nonatomic, readonly) unsigned int indexCount;
 @end

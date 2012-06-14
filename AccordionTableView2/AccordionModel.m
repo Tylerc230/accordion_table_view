@@ -62,6 +62,11 @@ const GLubyte latticeIndices[] = {
     return self.indexBuffer.length;
 }
 
+- (unsigned int)indexCount
+{
+    return self.indexBufferSize/sizeof(GLushort);
+}
+
 - (void)createModel:(int)latticeCount
 {
     int vBufferLength = latticeCount * kVertsPerLattice * 6 * sizeof(float);
@@ -96,7 +101,7 @@ const GLubyte latticeIndices[] = {
     for (int i = 0; i < latticeCount; i++) {
         int offset = i * kVertsPerLattice;
         for (int index = 0; index < kTrianglesPerLattice * 3; index++) {
-            GLubyte indexValue = latticeIndices[index] + offset;
+            GLushort indexValue = latticeIndices[index] + offset;
             [iBuffer appendBytes:&indexValue length:sizeof(indexValue)];            
         }
     }

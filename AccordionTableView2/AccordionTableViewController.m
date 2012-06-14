@@ -106,6 +106,20 @@ enum
     [self setupBuffers];
 }
 
+- (void)update
+{
+}
+
+- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+{
+    glClearColor(1.f, 1.f, 1.f, 1.0);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawElements(GL_TRIANGLE_STRIP, _model.indexCount, GL_UNSIGNED_SHORT, 0);
+}
+
+
+
 #pragma mark - gl stuff
 
 - (void)setupBuffers
