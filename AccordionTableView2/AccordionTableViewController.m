@@ -30,10 +30,12 @@ enum
     float _screenWidth;
     float _screenHeight;
     float _rotation;
-    GLKVector2 _contentOffset;
+    GLKVector2 _currentScreenOffset;
     AccordionModel *_model;
     GLKBaseEffect *_baseEffect;
+    
 }
+@property (nonatomic, readonly) GLKMatrix4 projectionMatrix;
 @end
 
 @implementation AccordionTableViewController
@@ -42,7 +44,6 @@ enum
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -92,9 +93,11 @@ enum
 - (IBAction)handleScrollGesture:(UIPanGestureRecognizer *)recognizer
 {
     GLKVector2 currentOffset = GLKVector2Make([recognizer translationInView:self.view].x, [recognizer translationInView:self.view].y);
-    [_model setContentOffset:GLKVector2Add(_contentOffset, currentOffset)];
+    
+    GLKVector3 currentWorldOffset = [self worldPointFromScreenPoint:GLKVector2Add(_currentScreenOffset, currentOffset)];
+    [_model setContentOffset:currentWorldOffset];
     if (recognizer.state == UIGestureRecognizerStateEnded) {
-        _contentOffset = GLKVector2Add(_contentOffset, currentOffset);
+        _currentScreenOffset = GLKVector2Add(_currentScreenOffset, currentOffset);
     }
 }
 
@@ -154,16 +157,31 @@ enum
     glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
 }
 
+- (GLKMatrix4)projectionMatrix
+{
+    float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 200.f);
+//    GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(-self.view.bounds.size.width/2, 
+//                                                      self.view.bounds.size.width/2,
+//                                                      -self.view.bounds.size.height/2, 
+//                                                      self.view.bounds.size.height/2, 1.0, 200.f);    
+    return projectionMatrix;
+}
 
-
-#pragma mark - gl stuff
+- (GLKVector3)worldPointFromScreenPoint:(GLKVector2)screenPoint
+{
+//    int viewport[] = {0, (int)self.view.bounds.size.height, (int)self.view.bounds.size.width, (int)self.view.bounds.size.height};
+//    GLKVector3 windowPoint = GLKVector3Make(screenPoint.x, screenPoint.y, 0.f);
+//    bool success = NO;
+//    GLKVector3 worldPoint = GLKMathUnproject(windowPoint, GLKMatrix4Identity, self.projectionMatrix, viewport, &success);
+//    return worldPoint;
+    return GLKVector3Make(screenPoint.x, screenPoint.y, 0.f);
+}
 
 - (void)setupProjection
 {
     _baseEffect = [[GLKBaseEffect alloc] init];
-    float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 200.f);
-    _baseEffect.transform.projectionMatrix = projectionMatrix;
+    _baseEffect.transform.projectionMatrix = self.projectionMatrix;
     _baseEffect.useConstantColor = YES;
     _baseEffect.constantColor = kWhiteColor;
     

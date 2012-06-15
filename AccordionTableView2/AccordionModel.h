@@ -15,7 +15,7 @@
 @property (nonatomic, readonly) GLushort *indicies;
 @property (nonatomic, readonly) unsigned int indexBufferSize;
 @property (nonatomic, readonly) unsigned int indexCount;
-@property (nonatomic, assign) GLKVector2 contentOffset;
+@property (nonatomic, assign) GLKVector3 contentOffset;
 @property (nonatomic, assign) int latticeCount;
 - (void)updatedLattice;
 @end

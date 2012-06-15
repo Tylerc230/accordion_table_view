@@ -8,14 +8,15 @@
 
 #import "AccordionModel.h"
 
-#define kNumLattices 3
+#define kNumLattices 7
 #define kVertsPerLattice 8
 #define kLatticeWidth 100.f
 #define kLatticeHeight 40.f
+#define kLatticeCompressedHeight (kLatticeHeight * .25f)
 #define kLatticeDepth 10.f
 #define kLatticeZPos 0.f
 #define kTrianglesPerLattice 4
-
+float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
 const GLubyte latticeIndices[] = {
     0,3,1,
     0,2,3,
@@ -83,12 +84,15 @@ const GLubyte latticeIndices[] = {
     for (int i = 0; i < self.latticeCount; i++) {
         
         for (int vrow = 0; vrow < 4; vrow++) {
-            float y = vrow == 0 ? latticeHeight : ((vrow == 1 || vrow == 2) ? latticeHeight/2 : 0.f);
-            y -= yStart;
-            y += i * latticeHeight;
+            float trueY = vrow == 0 ? latticeHeight : ((vrow == 1 || vrow == 2) ? latticeHeight/2 : 0.f);
+            trueY += i * latticeHeight - yStart;
+            float compressedY = calcCompressedY(trueY, latticeHeight, kLatticeCompressedHeight, latticeHeight * .5f);
+            
+            
+            
             float z = kLatticeZPos + (vrow == 0 || vrow == 3 ? latticeDepth/2 : -latticeDepth/2);
-            GLKVector3 left = {-latticeWidth/2, y, z};
-            GLKVector3 right = {latticeWidth/2, y, z};
+            GLKVector3 left = GLKVector3Make(-latticeWidth/2, compressedY, z);
+            GLKVector3 right = GLKVector3Make(latticeWidth/2, compressedY, z);
             float yNorm = vrow > 1 ? 1 : -1;
             GLKVector3 normal = GLKVector3Normalize(GLKVector3Make(0, yNorm, 1));
             size_t vSize = sizeof(GLKVector3);
@@ -129,3 +133,16 @@ const GLubyte latticeIndices[] = {
 }
 
 @end
+
+float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY)
+{
+    float compressionRatio = latticeCompressedHeight/latticeHeight;
+    float compressedY = trueY;
+    if (fabsf(trueY) >= compressionPointY) {
+        float signedCompressionPointY = trueY > 0.f ? compressionPointY : -compressionPointY;
+        compressedY = signedCompressionPointY + (trueY - signedCompressionPointY) * compressionRatio;
+    }
+    return compressedY;
+}
+
+
