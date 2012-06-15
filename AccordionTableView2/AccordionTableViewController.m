@@ -98,6 +98,7 @@ enum
     
 
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    view.drawableMultisample = GLKViewDrawableMultisample4X;
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     self.preferredFramesPerSecond = 60;
