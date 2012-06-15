@@ -8,6 +8,8 @@
 
 #import "AccordionTableViewController.h"
 #import "AccordionModel.h"
+#define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
+
 // Attribute index.
 enum
 {
@@ -89,7 +91,6 @@ enum
 {
     [EAGLContext setCurrentContext:_context];
     [self setupProjection];
-//    [self loadShaders];
     
     glUseProgram(_program);
     
@@ -116,7 +117,7 @@ enum
 
 - (void)update
 {
-    _rotation += 45.f * self.timeSinceLastUpdate;
+//    _rotation += 45.f * self.timeSinceLastUpdate;
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 
     modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, -150.f);
@@ -133,7 +134,7 @@ enum
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClearColor(.5f, .5f, .5f, 1.0);
+    glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
 }
@@ -148,10 +149,16 @@ enum
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 200.f);
     _baseEffect.transform.projectionMatrix = projectionMatrix;
+    _baseEffect.useConstantColor = YES;
+    _baseEffect.constantColor = kWhiteColor;
+    
     _baseEffect.lightModelTwoSided = YES;
     _baseEffect.lightingType = GLKLightingTypePerVertex;
     _baseEffect.light0.enabled = YES;
-    _baseEffect.light0.position = GLKVector4Make(0.f, 10.f, 10.f, 1.f);
+    _baseEffect.light0.position = GLKVector4Make(0.f, 200.f, 1000.f, 1.f);
+    _baseEffect.light0.diffuseColor = kWhiteColor;
+    _baseEffect.light0.ambientColor = kWhiteColor;
+    _baseEffect.light0.constantAttenuation = .95f;
     
     
     [_baseEffect prepareToDraw];

@@ -9,7 +9,7 @@
 #import "AccordionModel.h"
 #import "GLKit/GLKit.h"
 
-#define kNumLattices 2
+#define kNumLattices 3
 #define kVertsPerLattice 8
 #define kLatticeWidth 100.f
 #define kLatticeHeight 40.f
