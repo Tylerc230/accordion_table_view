@@ -9,7 +9,7 @@
 #import "AccordionModel.h"
 #import "GLKit/GLKit.h"
 
-#define kNumLattices 1
+#define kNumLattices 2
 #define kVertsPerLattice 8
 #define kLatticeWidth 100.f
 #define kLatticeHeight 40.f
@@ -25,12 +25,12 @@ const GLubyte latticeIndices[] = {
 };
 
 @interface AccordionModel ()
-@property (nonatomic, strong) NSMutableData *verticeBuffer;
+@property (nonatomic, strong) NSMutableData *vertexBuffer;
 @property (nonatomic, strong) NSMutableData *indexBuffer;
 @end
 
 @implementation AccordionModel
-@synthesize verticeBuffer;
+@synthesize vertexBuffer;
 @synthesize indexBuffer;
 
 - (id)init
@@ -44,12 +44,12 @@ const GLubyte latticeIndices[] = {
 
 - (GLfloat *)verticies
 {
-    return (GLfloat *)self.verticeBuffer.bytes;
+    return (GLfloat *)self.vertexBuffer.bytes;
 }
 
 - (unsigned int)vertexBufferSize
 {
-    return self.verticeBuffer.length;
+    return self.vertexBuffer.length;
 }
 
 - (GLushort *)indicies
@@ -106,10 +106,23 @@ const GLubyte latticeIndices[] = {
         }
     }
     
-    self.verticeBuffer = vBuffer;
+    self.vertexBuffer = vBuffer;
     self.indexBuffer = iBuffer;
+    [self printVects];
 
 }
 
+- (void)printVects
+{
+    float vectCount = self.vertexBuffer.length/sizeof(GLKVector3);
+    for (int i = 0; i < vectCount; i += 2) {
+        GLKVector3 position;
+        GLKVector3 normal;
+        [self.vertexBuffer getBytes:&position range:NSMakeRange(i * sizeof(GLKVector3), sizeof(GLKVector3))];
+        [self.vertexBuffer getBytes:&normal range:NSMakeRange((i + 1) * sizeof(GLKVector3), sizeof(GLKVector3))];
+        NSLog(@"vertex: x: %f y: %f z: %f normal x: %f y: %f z: %f", position.x, position.y, position.z, normal.x, normal.y, normal.z);
+    }
+    
+}
 
 @end

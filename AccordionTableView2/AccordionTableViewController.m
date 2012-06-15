@@ -79,6 +79,11 @@ enum
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    self.paused = !self.paused;
+}
+
 #pragma mark - private methods
 - (void)setupGL
 {
@@ -111,11 +116,11 @@ enum
 
 - (void)update
 {
-//    _rotation += 90.f * self.timeSinceLastUpdate;
+    _rotation += 45.f * self.timeSinceLastUpdate;
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
     modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, -150.f);
+    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
     _baseEffect.transform.modelviewMatrix = modelViewMatrix;
     
     [_baseEffect prepareToDraw];
@@ -130,7 +135,7 @@ enum
 {
     glClearColor(.5f, .5f, .5f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElements(GL_TRIANGLE_STRIP, _model.indexCount, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
 }
 
 
@@ -143,6 +148,7 @@ enum
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 200.f);
     _baseEffect.transform.projectionMatrix = projectionMatrix;
+    _baseEffect.lightModelTwoSided = YES;
     _baseEffect.lightingType = GLKLightingTypePerVertex;
     _baseEffect.light0.enabled = YES;
     _baseEffect.light0.position = GLKVector4Make(0.f, 10.f, 10.f, 1.f);
