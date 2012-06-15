@@ -141,6 +141,14 @@ const GLubyte latticeIndices[] = {
 
 @end
 
+/* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
+ * When we hit a certain y threshold in the positive or negative direction, we want the accordion to start folding
+ * to its folded (compressed) height.
+ * @param trueY the y offset before any folding occurs
+ * @param latticeHeight the unfolded height
+ * @param latticeCompressedHeight the height of a lattice after it has been compressed
+ * @param compressionPointY the offset from 0 in the positive or negative direction at which the lattice begins to compress
+ */
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY)
 {
     float compressionRatio = latticeCompressedHeight/latticeHeight;

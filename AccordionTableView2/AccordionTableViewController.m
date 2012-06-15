@@ -51,22 +51,6 @@ enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    
-    if (!_context) {
-        NSLog(@"Failed to create ES context");
-    }
-    
-    GLKView *view = (GLKView *)self.view;
-    view.context = _context;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
-    self.preferredFramesPerSecond = 60;
-    
-    _screenWidth = [UIScreen mainScreen].bounds.size.width;
-    _screenHeight = [UIScreen mainScreen].bounds.size.height;
-    view.contentScaleFactor = [UIScreen mainScreen].scale;
-    
     [self setupGL];
     [self setupModel];
 }
@@ -104,7 +88,24 @@ enum
 #pragma mark - private methods
 - (void)setupGL
 {
+    _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    if (!_context) {
+        NSLog(@"Failed to create ES context");
+    }
     [EAGLContext setCurrentContext:_context];
+    GLKView *view = (GLKView *)self.view;
+    view.context = _context;
+    
+
+    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    self.preferredFramesPerSecond = 60;
+    
+    _screenWidth = [UIScreen mainScreen].bounds.size.width;
+    _screenHeight = [UIScreen mainScreen].bounds.size.height;
+    view.contentScaleFactor = [UIScreen mainScreen].scale;
+
     [self setupProjection];
     
     glUseProgram(_program);
@@ -132,7 +133,7 @@ enum
 
 - (void)update
 {
-//    _rotation += 45.f * self.timeSinceLastUpdate;
+    _rotation += 15.f * self.timeSinceLastUpdate;
     [_model updatedLattice];
     glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
     
@@ -153,7 +154,7 @@ enum
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     glClearColor(1.f, 1.f, 1.f, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
 }
 
