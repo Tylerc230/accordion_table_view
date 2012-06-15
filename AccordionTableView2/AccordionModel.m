@@ -14,6 +14,7 @@
 #define kLatticeHeight 40.f
 #define kLatticeCompressedHeight (kLatticeHeight * .25f)
 #define kLatticeDepth 10.f
+#define kLatticeLength 22.f
 #define kLatticeZPos 0.f
 #define kTrianglesPerLattice 4
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
@@ -78,19 +79,25 @@ const GLubyte latticeIndices[] = {
     NSMutableData *vBuffer = [NSMutableData dataWithCapacity:vBufferLength];
     float latticeWidth = kLatticeWidth;
     float latticeHeight = kLatticeHeight;
-    float latticeDepth = kLatticeDepth;
     float yStart = (self.latticeCount * latticeHeight)/2 + self.contentOffset.y;
     
     for (int i = 0; i < self.latticeCount; i++) {
-        
+        float vrow0Y = 0;
+        float latticeCompressedH = 0.f;
         for (int vrow = 0; vrow < 4; vrow++) {
             float trueY = vrow == 0 ? latticeHeight : ((vrow == 1 || vrow == 2) ? latticeHeight/2 : 0.f);
             trueY += i * latticeHeight - yStart;
             float compressedY = calcCompressedY(trueY, latticeHeight, kLatticeCompressedHeight, latticeHeight * .5f);
+            if (vrow == 0) {
+                vrow0Y = compressedY;
+            }
+            if (vrow == 1) {
+                latticeCompressedH = vrow0Y - compressedY;
+            }
+            float latticeDepth = sqrtf((kLatticeLength * kLatticeLength) - (latticeCompressedH * latticeCompressedH));
             
             
-            
-            float z = kLatticeZPos + (vrow == 0 || vrow == 3 ? latticeDepth/2 : -latticeDepth/2);
+            float z = kLatticeZPos + (vrow == 0 || vrow == 3 ? 0.f : -latticeDepth);
             GLKVector3 left = GLKVector3Make(-latticeWidth/2, compressedY, z);
             GLKVector3 right = GLKVector3Make(latticeWidth/2, compressedY, z);
             float yNorm = vrow > 1 ? 1 : -1;
@@ -138,7 +145,10 @@ float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedH
 {
     float compressionRatio = latticeCompressedHeight/latticeHeight;
     float compressedY = trueY;
+    //If the vertex has crossed a certain y threshold, we scale its offset from 0 to make 
+    //it look compressed like venitian blind or accordion.
     if (fabsf(trueY) >= compressionPointY) {
+        //fabsf and signedCompressionPointY are to handle in the positive and negative directions. assumes offset from 0, 0, 0.
         float signedCompressionPointY = trueY > 0.f ? compressionPointY : -compressionPointY;
         compressedY = signedCompressionPointY + (trueY - signedCompressionPointY) * compressionRatio;
     }
