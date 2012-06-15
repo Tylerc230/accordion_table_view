@@ -27,7 +27,9 @@ enum
 
     float _screenWidth;
     float _screenHeight;
+    float _rotation;
     AccordionModel *_model;
+    GLKBaseEffect *_baseEffect;
 }
 @end
 
@@ -54,6 +56,7 @@ enum
     
     GLKView *view = (GLKView *)self.view;
     view.context = _context;
+    view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
     self.preferredFramesPerSecond = 60;
     
     _screenWidth = [UIScreen mainScreen].bounds.size.width;
@@ -80,8 +83,8 @@ enum
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:_context];
-    
-    [self loadShaders];
+    [self setupProjection];
+//    [self loadShaders];
     
     glUseProgram(_program);
     
@@ -108,12 +111,24 @@ enum
 
 - (void)update
 {
+//    _rotation += 90.f * self.timeSinceLastUpdate;
+    GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
+
+    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
+    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, -150.f);
+    _baseEffect.transform.modelviewMatrix = modelViewMatrix;
+    
+    [_baseEffect prepareToDraw];
+
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(GLKVector3) + sizeof(GLKVector3), 0);
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(GLKVector3) + sizeof(GLKVector3), (const GLvoid *)sizeof(GLKVector3));
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClearColor(1.f, 1.f, 1.f, 1.0);
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClearColor(.5f, .5f, .5f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_TRIANGLE_STRIP, _model.indexCount, GL_UNSIGNED_SHORT, 0);
 }
@@ -121,6 +136,20 @@ enum
 
 
 #pragma mark - gl stuff
+
+- (void)setupProjection
+{
+    _baseEffect = [[GLKBaseEffect alloc] init];
+    float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 200.f);
+    _baseEffect.transform.projectionMatrix = projectionMatrix;
+    _baseEffect.lightingType = GLKLightingTypePerVertex;
+    _baseEffect.light0.enabled = YES;
+    _baseEffect.light0.position = GLKVector4Make(0.f, 10.f, 10.f, 1.f);
+    
+    
+    [_baseEffect prepareToDraw];
+}
 
 - (void)setupBuffers
 {
@@ -131,138 +160,7 @@ enum
     glGenBuffers(1, &_positionVBO);
     glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
     glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
-    
-}
-
-
-
-- (BOOL)loadShaders
-{
-    GLuint vertShader, fragShader;
-    NSString *vertShaderPathname, *fragShaderPathname;
-    
-    // Create shader program.
-    _program = glCreateProgram();
-    
-    // Create and compile vertex shader.
-    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
-    if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vertShaderPathname]) {
-        NSLog(@"Failed to compile vertex shader");
-        return NO;
-    }
-    
-    // Create and compile fragment shader.
-    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
-    if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:fragShaderPathname]) {
-        NSLog(@"Failed to compile fragment shader");
-        return NO;
-    }
-    
-    // Attach vertex shader to program.
-    glAttachShader(_program, vertShader);
-    
-    // Attach fragment shader to program.
-    glAttachShader(_program, fragShader);
-    
-    // Bind attribute locations.
-    // This needs to be done prior to linking.
-    glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
-    
-    // Link program.
-    if (![self linkProgram:_program]) {
-        NSLog(@"Failed to link program: %d", _program);
         
-        if (vertShader) {
-            glDeleteShader(vertShader);
-            vertShader = 0;
-        }
-        if (fragShader) {
-            glDeleteShader(fragShader);
-            fragShader = 0;
-        }
-        if (_program) {
-            glDeleteProgram(_program);
-            _program = 0;
-        }
-        
-        return NO;
-    }
-    
-    // Release vertex and fragment shaders.
-    if (vertShader) {
-        glDetachShader(_program, vertShader);
-        glDeleteShader(vertShader);
-    }
-    if (fragShader) {
-        glDetachShader(_program, fragShader);
-        glDeleteShader(fragShader);
-    }
-    
-    return YES;
 }
-
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file
-{
-    GLint status;
-    const GLchar *source;
-    
-    source = (GLchar *)[[NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil] UTF8String];
-    if (!source) {
-        NSLog(@"Failed to load vertex shader");
-        return NO;
-    }
-    
-    *shader = glCreateShader(type);
-    glShaderSource(*shader, 1, &source, NULL);
-    glCompileShader(*shader);
-    
-#if defined(DEBUG)
-    GLint logLength;
-    glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        NSLog(@"Shader compile log:\n%s", log);
-        free(log);
-    }
-#endif
-    
-    glGetShaderiv(*shader, GL_COMPILE_STATUS, &status);
-    if (status == 0) {
-        glDeleteShader(*shader);
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (BOOL)linkProgram:(GLuint)prog
-{
-    GLint status;
-    glLinkProgram(prog);
-    
-#if defined(DEBUG)
-    GLint logLength;
-    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetProgramInfoLog(prog, logLength, &logLength, log);
-        NSLog(@"Program link log:\n%s", log);
-        free(log);
-    }
-#endif
-    
-    glGetProgramiv(prog, GL_LINK_STATUS, &status);
-    if (status == 0) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-
 
 @end

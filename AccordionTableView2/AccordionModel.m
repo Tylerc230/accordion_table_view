@@ -9,12 +9,12 @@
 #import "AccordionModel.h"
 #import "GLKit/GLKit.h"
 
-#define kNumLattices 6
+#define kNumLattices 1
 #define kVertsPerLattice 8
-#define kLatticeWidth 7.f
-#define kLatticeHeight 6.f
-#define kLatticeDepth 25.f
-#define kLatticeZPos -2.f
+#define kLatticeWidth 100.f
+#define kLatticeHeight 40.f
+#define kLatticeDepth 10.f
+#define kLatticeZPos 0.f
 #define kTrianglesPerLattice 4
 
 const GLubyte latticeIndices[] = {
