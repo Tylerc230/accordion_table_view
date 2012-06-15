@@ -7,7 +7,6 @@
 //
 
 #import "AccordionModel.h"
-#import "GLKit/GLKit.h"
 
 #define kNumLattices 3
 #define kVertsPerLattice 8
@@ -32,12 +31,15 @@ const GLubyte latticeIndices[] = {
 @implementation AccordionModel
 @synthesize vertexBuffer;
 @synthesize indexBuffer;
+@synthesize contentOffset;
+@synthesize latticeCount;
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        [self createModel:kNumLattices];
+        self.latticeCount = kNumLattices;
+        [self updatedLattice];
     }
     return self;
 }
@@ -67,16 +69,18 @@ const GLubyte latticeIndices[] = {
     return self.indexBufferSize/sizeof(GLushort);
 }
 
-- (void)createModel:(int)latticeCount
+- (void)updatedLattice
 {
-    int vBufferLength = latticeCount * kVertsPerLattice * 6 * sizeof(float);
+    self.vertexBuffer = nil;
+    self.indexBuffer = nil;
+    int vBufferLength = self.latticeCount * kVertsPerLattice * 6 * sizeof(float);
     NSMutableData *vBuffer = [NSMutableData dataWithCapacity:vBufferLength];
     float latticeWidth = kLatticeWidth;
     float latticeHeight = kLatticeHeight;
     float latticeDepth = kLatticeDepth;
-    float yStart = (latticeCount * latticeHeight)/2;
+    float yStart = (self.latticeCount * latticeHeight)/2 + self.contentOffset.y;
     
-    for (int i = 0; i < latticeCount; i++) {
+    for (int i = 0; i < self.latticeCount; i++) {
         
         for (int vrow = 0; vrow < 4; vrow++) {
             float y = vrow == 0 ? latticeHeight : ((vrow == 1 || vrow == 2) ? latticeHeight/2 : 0.f);
@@ -96,9 +100,9 @@ const GLubyte latticeIndices[] = {
         }
     }
     
-    int iBufferLength = latticeCount * kTrianglesPerLattice * 3;
+    int iBufferLength = self.latticeCount * kTrianglesPerLattice * 3;
     NSMutableData *iBuffer = [NSMutableData dataWithCapacity:iBufferLength];
-    for (int i = 0; i < latticeCount; i++) {
+    for (int i = 0; i < self.latticeCount; i++) {
         int offset = i * kVertsPerLattice;
         for (int index = 0; index < kTrianglesPerLattice * 3; index++) {
             GLushort indexValue = latticeIndices[index] + offset;
@@ -108,7 +112,6 @@ const GLubyte latticeIndices[] = {
     
     self.vertexBuffer = vBuffer;
     self.indexBuffer = iBuffer;
-    [self printVects];
 
 }
 

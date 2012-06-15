@@ -30,6 +30,7 @@ enum
     float _screenWidth;
     float _screenHeight;
     float _rotation;
+    GLKVector2 _contentOffset;
     AccordionModel *_model;
     GLKBaseEffect *_baseEffect;
 }
@@ -86,6 +87,17 @@ enum
     self.paused = !self.paused;
 }
 
+#pragma mark - UIPanGestureRecognizer delegate methods
+
+- (IBAction)handleScrollGesture:(UIPanGestureRecognizer *)recognizer
+{
+    GLKVector2 currentOffset = GLKVector2Make([recognizer translationInView:self.view].x, [recognizer translationInView:self.view].y);
+    [_model setContentOffset:GLKVector2Add(_contentOffset, currentOffset)];
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        _contentOffset = GLKVector2Add(_contentOffset, currentOffset);
+    }
+}
+
 #pragma mark - private methods
 - (void)setupGL
 {
@@ -118,6 +130,9 @@ enum
 - (void)update
 {
 //    _rotation += 45.f * self.timeSinceLastUpdate;
+    [_model updatedLattice];
+    glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
+    
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 
     modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, -150.f);
