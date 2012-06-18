@@ -9,6 +9,7 @@
 #import "AccordionTableViewController.h"
 #import "AccordionModel.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
+#define kConstantAttenuaion 1.25f
 
 // Attribute index.
 enum
@@ -44,6 +45,7 @@ enum
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
+//        _rotation = 45.f;
     }
     return self;
 }
@@ -162,7 +164,7 @@ enum
 - (GLKMatrix4)projectionMatrix
 {
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 200.f);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 1000.f);
 //    GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(-self.view.bounds.size.width/2, 
 //                                                      self.view.bounds.size.width/2,
 //                                                      -self.view.bounds.size.height/2, 
@@ -190,10 +192,10 @@ enum
     _baseEffect.lightModelTwoSided = YES;
     _baseEffect.lightingType = GLKLightingTypePerVertex;
     _baseEffect.light0.enabled = YES;
-    _baseEffect.light0.position = GLKVector4Make(0.f, 200.f, 1000.f, 1.f);
+    _baseEffect.light0.position = GLKVector4Make(0.f, 100.f, 60.f, 1.f);
     _baseEffect.light0.diffuseColor = kWhiteColor;
     _baseEffect.light0.ambientColor = kWhiteColor;
-    _baseEffect.light0.constantAttenuation = .95f;
+    _baseEffect.light0.constantAttenuation = kConstantAttenuaion;
     
     
     [_baseEffect prepareToDraw];

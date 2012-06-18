@@ -11,11 +11,11 @@
 #define kNumLattices 7
 #define kVertsPerLattice 8
 #define kLatticeWidth 100.f
-#define kLatticeHeight 40.f
+#define kLatticeHeight 100.f
 #define kLatticeCompressedHeight (kLatticeHeight * .25f)
-#define kLatticeDepth 10.f
 //If kLattice height is 2x kLatticeLength you will have no folding 
-#define kLatticeLength 22.f
+#define kLatticeLength (kLatticeHeight * .5f)
+#define kCompressionPointY (kLatticeHeight * .5f)
 #define kLatticeZPos 0.f
 #define kTrianglesPerLattice 4
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
@@ -90,12 +90,13 @@ const GLubyte latticeIndices[] = {
         float middleTrueY = 0.f + yStart - latticeYOffset;
         float bottomTrueY = -latticeHeight/2 + yStart - latticeYOffset;
         
-        float compressionYPoint = latticeHeight * .5f;
+        float compressionYPoint = kCompressionPointY;
         float compressedTopY = calcCompressedY(topTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
         float compressedMiddleY = calcCompressedY(middleTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
         float compressedBottomY = calcCompressedY(bottomTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
+        
         //This code ensures the the length of the each half of the lattice stay the same before and after the folding animation
-        float latticeCompressedH = compressedTopY - compressedMiddleY;
+        float latticeCompressedH = (compressedTopY - compressedBottomY)/2;
         //Get the height of the folded or unfolded lattice and use pythag thrm depth = (latticeLeght^2 - height^2)^(.5) or x = (hypotenuse^2 - y^2)^(.5)
         float latticeDepth = sqrtf((kLatticeLength * kLatticeLength) - (latticeCompressedH * latticeCompressedH));
         
