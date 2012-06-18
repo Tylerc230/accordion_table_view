@@ -9,7 +9,7 @@
 #import "AccordionTableViewController.h"
 #import "AccordionModel.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
-#define kConstantAttenuaion 1.25f
+#define kConstantAttenuaion 1.1f
 
 // Attribute index.
 enum

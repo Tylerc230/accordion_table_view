@@ -10,13 +10,12 @@
 
 #define kNumLattices 7
 #define kVertsPerLattice 8
-#define kLatticeWidth 100.f
-#define kLatticeHeight 100.f
+#define kLatticeWidth 120.f
+#define kLatticeHeight 120.f
 #define kLatticeCompressedHeight (kLatticeHeight * .25f)
 //If kLattice height is 2x kLatticeLength you will have no folding 
-#define kLatticeLength (kLatticeHeight * .5f)
+#define kLatticeLength (kLatticeHeight * .55f)
 #define kCompressionPointY (kLatticeHeight * .5f)
-#define kLatticeZPos 0.f
 #define kTrianglesPerLattice 4
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
 const GLubyte latticeIndices[] = {
