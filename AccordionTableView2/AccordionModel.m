@@ -14,6 +14,7 @@
 #define kLatticeHeight 40.f
 #define kLatticeCompressedHeight (kLatticeHeight * .25f)
 #define kLatticeDepth 10.f
+//If kLattice height is 2x kLatticeLength you will have no folding 
 #define kLatticeLength 22.f
 #define kLatticeZPos 0.f
 #define kTrianglesPerLattice 4
@@ -79,36 +80,65 @@ const GLubyte latticeIndices[] = {
     NSMutableData *vBuffer = [NSMutableData dataWithCapacity:vBufferLength];
     float latticeWidth = kLatticeWidth;
     float latticeHeight = kLatticeHeight;
-    float yStart = (self.latticeCount * latticeHeight)/2 + self.contentOffset.y;
+    //This line accounts for the scroll amount
+    float yStart = (self.latticeCount - 1) * kLatticeHeight/2  - self.contentOffset.y;
     
     for (int i = 0; i < self.latticeCount; i++) {
-        float vrow0Y = 0;
-        float latticeCompressedH = 0.f;
-        for (int vrow = 0; vrow < 4; vrow++) {
-            float trueY = vrow == 0 ? latticeHeight : ((vrow == 1 || vrow == 2) ? latticeHeight/2 : 0.f);
-            trueY += i * latticeHeight - yStart;
-            float compressedY = calcCompressedY(trueY, latticeHeight, kLatticeCompressedHeight, latticeHeight * .5f);
-            if (vrow == 0) {
-                vrow0Y = compressedY;
-            }
-            if (vrow == 1) {
-                latticeCompressedH = vrow0Y - compressedY;
-            }
-            float latticeDepth = sqrtf((kLatticeLength * kLatticeLength) - (latticeCompressedH * latticeCompressedH));
+        float latticeYOffset = i * kLatticeHeight;
+        //trueY is the unfolded y offset from 
+        float topTrueY = latticeHeight/2 + yStart - latticeYOffset;
+        float middleTrueY = 0.f + yStart - latticeYOffset;
+        float bottomTrueY = -latticeHeight/2 + yStart - latticeYOffset;
+        
+        float compressionYPoint = latticeHeight * .5f;
+        float compressedTopY = calcCompressedY(topTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
+        float compressedMiddleY = calcCompressedY(middleTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
+        float compressedBottomY = calcCompressedY(bottomTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
+        //This code ensures the the length of the each half of the lattice stay the same before and after the folding animation
+        float latticeCompressedH = compressedTopY - compressedMiddleY;
+        //Get the height of the folded or unfolded lattice and use pythag thrm depth = (latticeLeght^2 - height^2)^(.5) or x = (hypotenuse^2 - y^2)^(.5)
+        float latticeDepth = sqrtf((kLatticeLength * kLatticeLength) - (latticeCompressedH * latticeCompressedH));
+        
+        //front face of lattice is at 0 depth
+        float leftSide = -latticeWidth/2;
+        float rightSide = latticeWidth/2;
+        GLKVector3 topLeftVector = GLKVector3Make(leftSide, compressedTopY, 0.f);
+        GLKVector3 topRightVector = GLKVector3Make(rightSide, compressedTopY, 0.f);
+        GLKVector3 middleLeftVector = GLKVector3Make(leftSide, compressedMiddleY, -latticeDepth);
+        GLKVector3 middleRightVector = GLKVector3Make(rightSide, compressedMiddleY, -latticeDepth);
+        GLKVector3 bottomLeftVector = GLKVector3Make(leftSide, compressedBottomY, 0.f);
+        GLKVector3 bottomRightVector = GLKVector3Make(rightSide, compressedBottomY, 0.f);
+        
+        GLKVector3 topNormal = GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector));
+        GLKVector3 bottomNormal = GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector));
+        size_t vSize = sizeof(GLKVector3);
+        
+        //Top Row
+        [vBuffer appendBytes:&topLeftVector length:vSize];
+        [vBuffer appendBytes:&topNormal length:vSize];
+        [vBuffer appendBytes:&topRightVector length:vSize];
+        [vBuffer appendBytes:&topNormal length:vSize];
+        
+        //first middle row
+        [vBuffer appendBytes:&middleLeftVector length:vSize];
+        [vBuffer appendBytes:&topNormal length:vSize];
+        [vBuffer appendBytes:&middleRightVector length:vSize];
+        [vBuffer appendBytes:&topNormal length:vSize];
+        
+        //second middle row
+        [vBuffer appendBytes:&middleLeftVector length:vSize];
+        [vBuffer appendBytes:&bottomNormal length:vSize];
+        [vBuffer appendBytes:&middleRightVector length:vSize];
+        [vBuffer appendBytes:&bottomNormal length:vSize];
+        
+        //bottom row
+        [vBuffer appendBytes:&bottomLeftVector length:vSize];
+        [vBuffer appendBytes:&bottomNormal length:vSize];
+        [vBuffer appendBytes:&bottomRightVector length:vSize];
+        [vBuffer appendBytes:&bottomNormal length:vSize];
             
             
-            float z = kLatticeZPos + (vrow == 0 || vrow == 3 ? 0.f : -latticeDepth);
-            GLKVector3 left = GLKVector3Make(-latticeWidth/2, compressedY, z);
-            GLKVector3 right = GLKVector3Make(latticeWidth/2, compressedY, z);
-            float yNorm = vrow > 1 ? 1 : -1;
-            GLKVector3 normal = GLKVector3Normalize(GLKVector3Make(0, yNorm, 1));
-            size_t vSize = sizeof(GLKVector3);
-            [vBuffer appendBytes:&left length:vSize];
-            [vBuffer appendBytes:&normal length:vSize];
-            [vBuffer appendBytes:&right length:vSize];
-            [vBuffer appendBytes:&normal length:vSize];
             
-        }
     }
     
     int iBufferLength = self.latticeCount * kTrianglesPerLattice * 3;
@@ -123,7 +153,7 @@ const GLubyte latticeIndices[] = {
     
     self.vertexBuffer = vBuffer;
     self.indexBuffer = iBuffer;
-
+//    [self printVects];
 }
 
 - (void)printVects
