@@ -148,10 +148,15 @@ enum
     
     [_baseEffect prepareToDraw];
 
+    float stride = sizeof(GLKVector3) * 2 + sizeof(GLKVector2);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(GLKVector3) + sizeof(GLKVector3), 0);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, stride, 0);
+    
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(GLKVector3) + sizeof(GLKVector3), (const GLvoid *)sizeof(GLKVector3));
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid *)sizeof(GLKVector3));
+            
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *)(sizeof(GLKVector3) * 2));
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -182,6 +187,18 @@ enum
     return GLKVector3Make(screenPoint.x, screenPoint.y, 0.f);
 }
 
+- (void)loadTexture:(NSString *)fileName
+{
+    GLKTextureInfo *texture = nil;
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
+    NSError *error = nil;
+    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&error];
+    _baseEffect.texture2d0.name = texture.name;
+    _baseEffect.texture2d0.envMode = GLKTextureEnvModeReplace;
+    _baseEffect.texture2d0.target = GLKTextureTarget2D;
+    NSAssert(error == nil, @"Failed to load texture");
+}
+
 - (void)setupProjection
 {
     _baseEffect = [[GLKBaseEffect alloc] init];
@@ -196,6 +213,8 @@ enum
     _baseEffect.light0.diffuseColor = kWhiteColor;
     _baseEffect.light0.ambientColor = kWhiteColor;
     _baseEffect.light0.constantAttenuation = kConstantAttenuaion;
+    
+    [self loadTexture:@"tile_sonyTV"];
     
     
     [_baseEffect prepareToDraw];

@@ -111,32 +111,49 @@ const GLubyte latticeIndices[] = {
         
         GLKVector3 topNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector)));
         GLKVector3 bottomNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector)));
-        size_t vSize = sizeof(GLKVector3);
+        
+        GLKVector2 topLeftTextCoord = GLKVector2Make(0.f, 0.f);
+        GLKVector2 topRightTextCoord = GLKVector2Make(0.f, 1.f);
+        GLKVector2 bottomLeftTextCoord = GLKVector2Make(1.0f, 0.f);
+        GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 1.f);
+        size_t v3Size = sizeof(GLKVector3);
+        size_t v2Size = sizeof(GLKVector2);
         
         //Top Row
-        [vBuffer appendBytes:&topLeftVector length:vSize];
-        [vBuffer appendBytes:&topNormal length:vSize];
-        [vBuffer appendBytes:&topRightVector length:vSize];
-        [vBuffer appendBytes:&topNormal length:vSize];
+        [vBuffer appendBytes:&topLeftVector length:v3Size];
+        [vBuffer appendBytes:&topNormal length:v3Size];
+        [vBuffer appendBytes:&topLeftTextCoord length:v2Size];
+        
+        [vBuffer appendBytes:&topRightVector length:v3Size];
+        [vBuffer appendBytes:&topNormal length:v3Size];
+        [vBuffer appendBytes:&topRightTextCoord length:v2Size];
         
         //first middle row
-        [vBuffer appendBytes:&middleLeftVector length:vSize];
-        [vBuffer appendBytes:&topNormal length:vSize];
-        [vBuffer appendBytes:&middleRightVector length:vSize];
-        [vBuffer appendBytes:&topNormal length:vSize];
+        [vBuffer appendBytes:&middleLeftVector length:v3Size];
+        [vBuffer appendBytes:&topNormal length:v3Size];
+        [vBuffer appendBytes:&bottomLeftTextCoord length:v2Size];
+        
+        [vBuffer appendBytes:&middleRightVector length:v3Size];
+        [vBuffer appendBytes:&topNormal length:v3Size];
+        [vBuffer appendBytes:&bottomRightTextCoord length:v2Size];
         
         //second middle row
-        [vBuffer appendBytes:&middleLeftVector length:vSize];
-        [vBuffer appendBytes:&bottomNormal length:vSize];
-        [vBuffer appendBytes:&middleRightVector length:vSize];
-        [vBuffer appendBytes:&bottomNormal length:vSize];
+        [vBuffer appendBytes:&middleLeftVector length:v3Size];
+        [vBuffer appendBytes:&bottomNormal length:v3Size];
+        [vBuffer appendBytes:&topLeftTextCoord length:v2Size];
+        
+        [vBuffer appendBytes:&middleRightVector length:v3Size];
+        [vBuffer appendBytes:&bottomNormal length:v3Size];
+        [vBuffer appendBytes:&topRightTextCoord length:v2Size];
         
         //bottom row
-        [vBuffer appendBytes:&bottomLeftVector length:vSize];
-        [vBuffer appendBytes:&bottomNormal length:vSize];
-        [vBuffer appendBytes:&bottomRightVector length:vSize];
-        [vBuffer appendBytes:&bottomNormal length:vSize];
-            
+        [vBuffer appendBytes:&bottomLeftVector length:v3Size];
+        [vBuffer appendBytes:&bottomNormal length:v3Size];
+        [vBuffer appendBytes:&bottomLeftTextCoord length:v2Size];
+        
+        [vBuffer appendBytes:&bottomRightVector length:v3Size];
+        [vBuffer appendBytes:&bottomNormal length:v3Size];
+        [vBuffer appendBytes:&bottomRightTextCoord length:v2Size];    
             
             
     }
