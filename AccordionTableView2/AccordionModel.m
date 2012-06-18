@@ -17,6 +17,36 @@
 #define kLatticeLength (kLatticeHeight * .55f)
 #define kCompressionPointY (kLatticeHeight * .5f)
 #define kTrianglesPerLattice 4
+
+
+typedef struct {
+    GLKVector3 position;
+    GLKVector3 normal;
+    GLKVector2 textureCoords;
+}Vertex;
+
+Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords)
+{
+    Vertex newVert = {position, normal, textureCoords};
+    return newVert;
+}
+
+typedef struct {
+    //top half
+    Vertex topLeft1;
+    Vertex topRight1;
+    Vertex bottomLeft1;
+    Vertex bottomRight1;
+    
+    //bottom half
+    Vertex topLeft2;
+    Vertex topRight2;
+    Vertex bottomLeft2;
+    Vertex bottomRight2;
+}FoldingRect;
+
+
+
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
 const GLubyte latticeIndices[] = {
     0,3,1,
@@ -116,46 +146,20 @@ const GLubyte latticeIndices[] = {
         GLKVector2 topRightTextCoord = GLKVector2Make(0.f, 1.f);
         GLKVector2 bottomLeftTextCoord = GLKVector2Make(1.0f, 0.f);
         GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 1.f);
-        size_t v3Size = sizeof(GLKVector3);
-        size_t v2Size = sizeof(GLKVector2);
         
-        //Top Row
-        [vBuffer appendBytes:&topLeftVector length:v3Size];
-        [vBuffer appendBytes:&topNormal length:v3Size];
-        [vBuffer appendBytes:&topLeftTextCoord length:v2Size];
+        FoldingRect newLattice;
+        newLattice.topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
+        newLattice.topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
+        newLattice.bottomLeft1 = createVert(middleLeftVector, topNormal, bottomLeftTextCoord);
+        newLattice.bottomRight1 = createVert(middleRightVector, topNormal, bottomRightTextCoord);
         
-        [vBuffer appendBytes:&topRightVector length:v3Size];
-        [vBuffer appendBytes:&topNormal length:v3Size];
-        [vBuffer appendBytes:&topRightTextCoord length:v2Size];
+        newLattice.topLeft2 = createVert(middleLeftVector, bottomNormal, topLeftTextCoord);
+        newLattice.topRight2 = createVert(middleRightVector, bottomNormal, topRightTextCoord);
+        newLattice.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
+        newLattice.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
         
-        //first middle row
-        [vBuffer appendBytes:&middleLeftVector length:v3Size];
-        [vBuffer appendBytes:&topNormal length:v3Size];
-        [vBuffer appendBytes:&bottomLeftTextCoord length:v2Size];
+        [vBuffer appendBytes:&newLattice length:sizeof(FoldingRect)];
         
-        [vBuffer appendBytes:&middleRightVector length:v3Size];
-        [vBuffer appendBytes:&topNormal length:v3Size];
-        [vBuffer appendBytes:&bottomRightTextCoord length:v2Size];
-        
-        //second middle row
-        [vBuffer appendBytes:&middleLeftVector length:v3Size];
-        [vBuffer appendBytes:&bottomNormal length:v3Size];
-        [vBuffer appendBytes:&topLeftTextCoord length:v2Size];
-        
-        [vBuffer appendBytes:&middleRightVector length:v3Size];
-        [vBuffer appendBytes:&bottomNormal length:v3Size];
-        [vBuffer appendBytes:&topRightTextCoord length:v2Size];
-        
-        //bottom row
-        [vBuffer appendBytes:&bottomLeftVector length:v3Size];
-        [vBuffer appendBytes:&bottomNormal length:v3Size];
-        [vBuffer appendBytes:&bottomLeftTextCoord length:v2Size];
-        
-        [vBuffer appendBytes:&bottomRightVector length:v3Size];
-        [vBuffer appendBytes:&bottomNormal length:v3Size];
-        [vBuffer appendBytes:&bottomRightTextCoord length:v2Size];    
-            
-            
     }
     
     int iBufferLength = self.latticeCount * kTrianglesPerLattice * 3;
