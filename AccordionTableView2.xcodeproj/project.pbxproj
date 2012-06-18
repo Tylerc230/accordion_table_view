@@ -29,6 +29,7 @@
 		703E5170158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
 		703E5171158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
 		703E5185158A9B8B0092B497 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E5184158A9B8B0092B497 /* OpenGLES.framework */; };
+		70E2E915158FA619004DE63C /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70E2E914158FA619004DE63C /* MainWindow-iPad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		703E516E158A8E770092B497 /* AccordionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccordionModel.h; sourceTree = "<group>"; };
 		703E516F158A8E770092B497 /* AccordionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccordionModel.m; sourceTree = "<group>"; };
 		703E5184158A9B8B0092B497 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		70E2E914158FA619004DE63C /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 		703E5137158A8AFA0092B497 /* AccordionTableView2 */ = {
 			isa = PBXGroup;
 			children = (
+				70E2E913158FA618004DE63C /* iPad */,
 				703E5163158A8BD80092B497 /* AccordionTableView */,
 				703E5140158A8AFA0092B497 /* AppDelegate.h */,
 				703E5141158A8AFA0092B497 /* AppDelegate.m */,
@@ -179,6 +182,14 @@
 				703E516F158A8E770092B497 /* AccordionModel.m */,
 			);
 			name = AccordionTableView;
+			sourceTree = "<group>";
+		};
+		70E2E913158FA618004DE63C /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+				70E2E914158FA619004DE63C /* MainWindow-iPad.xib */,
+			);
+			name = iPad;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +265,7 @@
 				703E513C158A8AFA0092B497 /* InfoPlist.strings in Resources */,
 				703E5161158A8B610092B497 /* MainWindow.xib in Resources */,
 				703E5169158A8C000092B497 /* AccordionTableViewController.xib in Resources */,
+				70E2E915158FA619004DE63C /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,8 +402,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AccordionTableView2/AccordionTableView2-Prefix.pch";
 				INFOPLIST_FILE = "AccordionTableView2/AccordionTableView2-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -402,8 +415,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AccordionTableView2/AccordionTableView2-Prefix.pch";
 				INFOPLIST_FILE = "AccordionTableView2/AccordionTableView2-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

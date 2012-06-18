@@ -109,8 +109,8 @@ const GLubyte latticeIndices[] = {
         GLKVector3 bottomLeftVector = GLKVector3Make(leftSide, compressedBottomY, 0.f);
         GLKVector3 bottomRightVector = GLKVector3Make(rightSide, compressedBottomY, 0.f);
         
-        GLKVector3 topNormal = GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector));
-        GLKVector3 bottomNormal = GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector));
+        GLKVector3 topNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector)));
+        GLKVector3 bottomNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector)));
         size_t vSize = sizeof(GLKVector3);
         
         //Top Row
