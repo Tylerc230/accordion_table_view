@@ -59,9 +59,9 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 - (GLKVector3)position
 {
-    float yCompressionPoint = super.scale.y * kCompressionYCoff;
-    GLKVector3 position = [self truePosition];
 
+    GLKVector3 position = [self truePosition];
+//    float yCompressionPoint = super.scale.y * kCompressionYCoff;
 //    if (fabsf(position.y) > yCompressionPoint) {
 //        float sign = position.y != 0.f ? position.y/fabs(position.y) : 1.f;
 //        float scaledY = (fabs(position.y) - yCompressionPoint) * _yScaleCoff;
@@ -167,6 +167,5 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     } else {
         yScale = compressionRatio;
     }
-    NSLog(@"scale: %f", yScale);
     return yScale;
 }
