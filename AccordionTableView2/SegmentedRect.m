@@ -7,6 +7,7 @@
 //
 
 #import "SegmentedRect.h"
+#define kCompressionYCoff .5f
 
 typedef struct {
     //top half
@@ -31,16 +32,47 @@ const VertexBufferIndex rectIndicies[] = {
 
 float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY);
 
+@interface SegmentedRect ()
+{
+    float _yScaleCoff;
+}
+@end
+
 @implementation SegmentedRect
-@synthesize originalOffset;
+@synthesize originalPosition;
+@synthesize offset;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+    }
+    return self;
+}
+
 - (GLKVector3)scale
 {
+    GLKVector3 scaledScale = [super scale];
+    scaledScale.y *= _yScaleCoff;
+    return scaledScale;
+}
 
-    GLKVector3 scale = [super scale];
-    float yCompressionPoint = scale.y/2.f;
-    float scaleCoff = calcCompressedHeight(self.position.y, scale.y, .25f, yCompressionPoint);
-    
-    return GLKVector3Make(scale.x, scaleCoff * scale.y , scale.z);
+- (GLKVector3)position
+{
+    float yCompressionPoint = super.scale.y * kCompressionYCoff;
+    GLKVector3 position = [self truePosition];
+
+//    if (fabsf(position.y) > yCompressionPoint) {
+//        float sign = position.y != 0.f ? position.y/fabs(position.y) : 1.f;
+//        float scaledY = (fabs(position.y) - yCompressionPoint) * _yScaleCoff;
+//        position = GLKVector3Make(position.x, sign * (yCompressionPoint + scaledY), position.z);
+//    }
+    return position;
+}
+
+- (GLKVector3)truePosition
+{
+    return GLKVector3Add(self.offset, self.originalPosition);    
 }
 
 - (void)generateVertices:(NSMutableData *)vertexBuffer
@@ -94,6 +126,26 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 }
 
+- (void)setOffset:(GLKVector3)anOffset
+{
+    offset = anOffset;
+    [self updateScaleCoeff];
+}
+
+- (void)setOriginalPosition:(GLKVector3)anOriginalPosition
+{
+    originalPosition = anOriginalPosition;
+    [self updateScaleCoeff];
+}
+
+- (void)updateScaleCoeff
+{
+    GLKVector3 scale = [super scale];
+    float yCompressionPoint = scale.y * kCompressionYCoff;
+    GLKVector3 truePosition = [self truePosition];
+    _yScaleCoff = calcCompressedHeight(truePosition.y, scale.y, .0f, yCompressionPoint);
+}
+
 @end
 
 /* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
@@ -106,14 +158,15 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
  */
 float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY)
 {
-    float yScale = 1.f;
-    float bottomY = fabs(trueY) - latticeHeight/2;
-    float delta = compressionPointY - bottomY;
-    if (delta < latticeHeight) {
-        yScale = delta/latticeHeight;
-        if (yScale < compressionRatio) {
-            yScale = compressionRatio;
-        }
+    float yScale = 0.f;
+    float yBottom = fabsf(trueY) - latticeHeight/2;
+    float delta = compressionPointY - yBottom;
+    if (delta > 0.f) {
+        float variableCompressionRatio = 1.f - compressionRatio;
+        yScale = compressionRatio + (delta/compressionPointY) * variableCompressionRatio;
+    } else {
+        yScale = compressionRatio;
     }
+    NSLog(@"scale: %f", yScale);
     return yScale;
 }

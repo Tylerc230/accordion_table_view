@@ -9,5 +9,6 @@
 #import "WorldObject.h"
 
 @interface SegmentedRect : WorldObject
-@property (nonatomic, assign) GLKVector3 originalOffset;
+@property (nonatomic, assign) GLKVector3 originalPosition;
+@property (nonatomic, assign) GLKVector3 offset;
 @end

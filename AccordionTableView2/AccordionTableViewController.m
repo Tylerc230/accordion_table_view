@@ -12,8 +12,8 @@
 #import "WorldObject.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.1f
-//#define kCameraZ -150.f
-#define kCameraZ -400.f
+#define kCameraZ -150.f
+//#define kCameraZ -400.f
 
 // Attribute index.
 enum
@@ -48,7 +48,7 @@ enum
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-//        _rotation = 90.f;
+//        _rotation = 75.f;
     }
     return self;
 }
@@ -181,6 +181,9 @@ enum
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 1000.f);
     return projectionMatrix;
+//    float hWidth = self.view.bounds.size.width/2;
+//    float hHeight =self.view.bounds.size.height/2;
+//    return GLKMatrix4MakeOrtho(-hWidth, hWidth, -hHeight, hHeight, 1.0, 1000.f);
 }
 
 - (GLKVector3)worldPointFromScreenPoint:(GLKVector2)screenPoint
