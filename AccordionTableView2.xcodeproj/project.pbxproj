@@ -29,6 +29,16 @@
 		703E5170158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
 		703E5171158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
 		703E5185158A9B8B0092B497 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E5184158A9B8B0092B497 /* OpenGLES.framework */; };
+		707CDA301590E21E001B78A4 /* WorldScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA2F1590E21E001B78A4 /* WorldScene.m */; };
+		707CDA311590E21E001B78A4 /* WorldScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA2F1590E21E001B78A4 /* WorldScene.m */; };
+		707CDA441590E2F2001B78A4 /* WorldObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA431590E2F2001B78A4 /* WorldObject.m */; };
+		707CDA451590E2F2001B78A4 /* WorldObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA431590E2F2001B78A4 /* WorldObject.m */; };
+		707CDA491590E383001B78A4 /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA481590E383001B78A4 /* GLViewController.m */; };
+		707CDA4A1590E383001B78A4 /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA481590E383001B78A4 /* GLViewController.m */; };
+		707CDA4D1590E642001B78A4 /* SegmentedRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA4C1590E642001B78A4 /* SegmentedRect.m */; };
+		707CDA4E1590E642001B78A4 /* SegmentedRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA4C1590E642001B78A4 /* SegmentedRect.m */; };
+		707CDA501590E9E2001B78A4 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA4F1590E9E2001B78A4 /* Utils.m */; };
+		707CDA511590E9E2001B78A4 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA4F1590E9E2001B78A4 /* Utils.m */; };
 		7080E239158FD6F400FCFC21 /* tile_sonyTV.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E237158FD6F400FCFC21 /* tile_sonyTV.png */; };
 		7080E23A158FD6F400FCFC21 /* tile_sonyTV.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E237158FD6F400FCFC21 /* tile_sonyTV.png */; };
 		7080E23B158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */; };
@@ -71,6 +81,16 @@
 		703E516E158A8E770092B497 /* AccordionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccordionModel.h; sourceTree = "<group>"; };
 		703E516F158A8E770092B497 /* AccordionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccordionModel.m; sourceTree = "<group>"; };
 		703E5184158A9B8B0092B497 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		707CDA2E1590E21E001B78A4 /* WorldScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldScene.h; path = GLEngine/WorldScene.h; sourceTree = "<group>"; };
+		707CDA2F1590E21E001B78A4 /* WorldScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorldScene.m; path = GLEngine/WorldScene.m; sourceTree = "<group>"; };
+		707CDA421590E2F2001B78A4 /* WorldObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldObject.h; path = GLEngine/WorldObject.h; sourceTree = "<group>"; };
+		707CDA431590E2F2001B78A4 /* WorldObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorldObject.m; path = GLEngine/WorldObject.m; sourceTree = "<group>"; };
+		707CDA471590E383001B78A4 /* GLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLViewController.h; path = GLEngine/GLViewController.h; sourceTree = "<group>"; };
+		707CDA481590E383001B78A4 /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GLViewController.m; path = GLEngine/GLViewController.m; sourceTree = "<group>"; };
+		707CDA4B1590E642001B78A4 /* SegmentedRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedRect.h; sourceTree = "<group>"; };
+		707CDA4C1590E642001B78A4 /* SegmentedRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentedRect.m; sourceTree = "<group>"; };
+		707CDA4F1590E9E2001B78A4 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		707CDA521590EA00001B78A4 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		7080E237158FD6F400FCFC21 /* tile_sonyTV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_sonyTV.png; sourceTree = "<group>"; };
 		7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tile_sonyTV@2x.png"; sourceTree = "<group>"; };
 		70E2E914158FA619004DE63C /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
@@ -138,6 +158,7 @@
 		703E5137158A8AFA0092B497 /* AccordionTableView2 */ = {
 			isa = PBXGroup;
 			children = (
+				707CDA2C1590E1E0001B78A4 /* GLEngine */,
 				70E2E913158FA618004DE63C /* iPad */,
 				703E5163158A8BD80092B497 /* AccordionTableView */,
 				703E5140158A8AFA0092B497 /* AppDelegate.h */,
@@ -188,8 +209,25 @@
 				703E5166158A8C000092B497 /* AccordionTableViewController.xib */,
 				703E516E158A8E770092B497 /* AccordionModel.h */,
 				703E516F158A8E770092B497 /* AccordionModel.m */,
+				707CDA4B1590E642001B78A4 /* SegmentedRect.h */,
+				707CDA4C1590E642001B78A4 /* SegmentedRect.m */,
 			);
 			name = AccordionTableView;
+			sourceTree = "<group>";
+		};
+		707CDA2C1590E1E0001B78A4 /* GLEngine */ = {
+			isa = PBXGroup;
+			children = (
+				707CDA2E1590E21E001B78A4 /* WorldScene.h */,
+				707CDA2F1590E21E001B78A4 /* WorldScene.m */,
+				707CDA421590E2F2001B78A4 /* WorldObject.h */,
+				707CDA431590E2F2001B78A4 /* WorldObject.m */,
+				707CDA471590E383001B78A4 /* GLViewController.h */,
+				707CDA481590E383001B78A4 /* GLViewController.m */,
+				707CDA4F1590E9E2001B78A4 /* Utils.m */,
+				707CDA521590EA00001B78A4 /* Utils.h */,
+			);
+			name = GLEngine;
 			sourceTree = "<group>";
 		};
 		70E2E913158FA618004DE63C /* iPad */ = {
@@ -318,6 +356,11 @@
 				703E5142158A8AFA0092B497 /* AppDelegate.m in Sources */,
 				703E5167158A8C000092B497 /* AccordionTableViewController.m in Sources */,
 				703E5170158A8E770092B497 /* AccordionModel.m in Sources */,
+				707CDA301590E21E001B78A4 /* WorldScene.m in Sources */,
+				707CDA441590E2F2001B78A4 /* WorldObject.m in Sources */,
+				707CDA491590E383001B78A4 /* GLViewController.m in Sources */,
+				707CDA4D1590E642001B78A4 /* SegmentedRect.m in Sources */,
+				707CDA501590E9E2001B78A4 /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +371,11 @@
 				703E5157158A8AFA0092B497 /* AccordionTableView2Tests.m in Sources */,
 				703E5168158A8C000092B497 /* AccordionTableViewController.m in Sources */,
 				703E5171158A8E770092B497 /* AccordionModel.m in Sources */,
+				707CDA311590E21E001B78A4 /* WorldScene.m in Sources */,
+				707CDA451590E2F2001B78A4 /* WorldObject.m in Sources */,
+				707CDA4A1590E383001B78A4 /* GLViewController.m in Sources */,
+				707CDA4E1590E642001B78A4 /* SegmentedRect.m in Sources */,
+				707CDA511590E9E2001B78A4 /* Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

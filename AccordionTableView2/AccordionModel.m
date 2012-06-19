@@ -7,7 +7,7 @@
 //
 
 #import "AccordionModel.h"
-
+#import "Utils.h"
 #define kNumLattices 1
 #define kVertsPerLattice 8
 #define kLatticeWidth 120.f
@@ -17,13 +17,6 @@
 //If kLattice height is 2x kLatticeLength you will have no folding 
 #define kLatticeLength (kLatticeHeight * .55f)
 #define kCompressionPointY (kLatticeHeight * .5f)
-
-
-typedef struct {
-    GLKVector3 position;
-    GLKVector3 normal;
-    GLKVector2 textureCoords;
-}Vertex;
 
 typedef struct {
     //top half
@@ -207,12 +200,6 @@ float calcCompressedY(float trueY, float latticeHeight, float compressionRatio, 
         compressedY = signedCompressionPointY + (trueY - signedCompressionPointY) * compressionRatio;
     }
     return compressedY;
-}
-
-Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords)
-{
-    Vertex newVert = {position, normal, textureCoords};
-    return newVert;
 }
 
 FoldingRect createFoldingRect(float compressionPointY, float latticeWidth, float latticeHeight, float latticeLength, float latticeX, float latticeY, float latticeZ)
