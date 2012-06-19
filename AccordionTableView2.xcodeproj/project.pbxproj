@@ -29,6 +29,10 @@
 		703E5170158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
 		703E5171158A8E770092B497 /* AccordionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 703E516F158A8E770092B497 /* AccordionModel.m */; };
 		703E5185158A9B8B0092B497 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E5184158A9B8B0092B497 /* OpenGLES.framework */; };
+		7080E239158FD6F400FCFC21 /* tile_sonyTV.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E237158FD6F400FCFC21 /* tile_sonyTV.png */; };
+		7080E23A158FD6F400FCFC21 /* tile_sonyTV.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E237158FD6F400FCFC21 /* tile_sonyTV.png */; };
+		7080E23B158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */; };
+		7080E23C158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */; };
 		70E2E915158FA619004DE63C /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70E2E914158FA619004DE63C /* MainWindow-iPad.xib */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +71,8 @@
 		703E516E158A8E770092B497 /* AccordionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccordionModel.h; sourceTree = "<group>"; };
 		703E516F158A8E770092B497 /* AccordionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccordionModel.m; sourceTree = "<group>"; };
 		703E5184158A9B8B0092B497 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		7080E237158FD6F400FCFC21 /* tile_sonyTV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_sonyTV.png; sourceTree = "<group>"; };
+		7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tile_sonyTV@2x.png"; sourceTree = "<group>"; };
 		70E2E914158FA619004DE63C /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,6 +181,8 @@
 		703E5163158A8BD80092B497 /* AccordionTableView */ = {
 			isa = PBXGroup;
 			children = (
+				7080E237158FD6F400FCFC21 /* tile_sonyTV.png */,
+				7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */,
 				703E5164158A8C000092B497 /* AccordionTableViewController.h */,
 				703E5165158A8C000092B497 /* AccordionTableViewController.m */,
 				703E5166158A8C000092B497 /* AccordionTableViewController.xib */,
@@ -266,6 +274,8 @@
 				703E5161158A8B610092B497 /* MainWindow.xib in Resources */,
 				703E5169158A8C000092B497 /* AccordionTableViewController.xib in Resources */,
 				70E2E915158FA619004DE63C /* MainWindow-iPad.xib in Resources */,
+				7080E239158FD6F400FCFC21 /* tile_sonyTV.png in Resources */,
+				7080E23B158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +286,8 @@
 				703E5154158A8AFA0092B497 /* InfoPlist.strings in Resources */,
 				703E5162158A8B610092B497 /* MainWindow.xib in Resources */,
 				703E516A158A8C000092B497 /* AccordionTableViewController.xib in Resources */,
+				7080E23A158FD6F400FCFC21 /* tile_sonyTV.png in Resources */,
+				7080E23C158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

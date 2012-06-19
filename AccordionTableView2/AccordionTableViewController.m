@@ -10,6 +10,8 @@
 #import "AccordionModel.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.1f
+//#define kCameraZ -150.f
+#define kCameraZ -400.f
 
 // Attribute index.
 enum
@@ -45,7 +47,7 @@ enum
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-//        _rotation = 45.f;
+        _rotation = 90.f;
     }
     return self;
 }
@@ -142,33 +144,49 @@ enum
     
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 
-    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, -150.f);
+    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, kCameraZ);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
     _baseEffect.transform.modelviewMatrix = modelViewMatrix;
     
     [_baseEffect prepareToDraw];
 
+    float stride = sizeof(GLKVector3) * 2 + sizeof(GLKVector2);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(GLKVector3) + sizeof(GLKVector3), 0);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, stride, 0);
+    
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(GLKVector3) + sizeof(GLKVector3), (const GLvoid *)sizeof(GLKVector3));
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid *)sizeof(GLKVector3));
+            
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *)(sizeof(GLKVector3) * 2));
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _model.indexBufferSize, _model.indicies, GL_STATIC_DRAW);
+    _baseEffect.texture2d0.enabled = NO;
+    [_baseEffect prepareToDraw];
     glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
+    _baseEffect.texture2d0.enabled = YES;
+    
+    
+    [_baseEffect prepareToDraw];
+    for (int i = 0; i < _model.latticeCount; i++) {
+        FoldingRectIndicies rectIndicies = [_model foldingRectIndiciesForIndex:i];
+        _baseEffect.texture2d0.name = rectIndicies.glTextName;
+        _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
+        _baseEffect.texture2d0.target = GLKTextureTarget2D;
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndicies.indices), rectIndicies.indices, GL_STATIC_DRAW);
+        glDrawElements(GL_TRIANGLES, rectIndicies.count, GL_UNSIGNED_SHORT, 0);
+    }
 }
 
 - (GLKMatrix4)projectionMatrix
 {
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 1000.f);
-//    GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(-self.view.bounds.size.width/2, 
-//                                                      self.view.bounds.size.width/2,
-//                                                      -self.view.bounds.size.height/2, 
-//                                                      self.view.bounds.size.height/2, 1.0, 200.f);    
     return projectionMatrix;
 }
 
