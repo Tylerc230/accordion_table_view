@@ -8,7 +8,7 @@
 
 #import "AccordionModel.h"
 
-#define kNumLattices 7
+#define kNumLattices 1
 #define kVertsPerLattice 8
 #define kLatticeWidth 120.f
 #define kLatticeHeight 120.f
@@ -16,7 +16,6 @@
 //If kLattice height is 2x kLatticeLength you will have no folding 
 #define kLatticeLength (kLatticeHeight * .55f)
 #define kCompressionPointY (kLatticeHeight * .5f)
-#define kTrianglesPerLattice 4
 
 
 typedef struct {
@@ -40,9 +39,8 @@ typedef struct {
 }FoldingRect;
 
 
-
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
-FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float latticeLength, float latticeY);
+FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float latticeLength, float latticeX, float latticeY);
 Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords);
 const GLubyte latticeIndices[] = {
     0,3,1,
@@ -52,8 +50,12 @@ const GLubyte latticeIndices[] = {
 };
 
 @interface AccordionModel ()
+{
+    FoldingRectIndicies * _rectIndicies;
+}
 @property (nonatomic, strong) NSMutableData *vertexBuffer;
 @property (nonatomic, strong) NSMutableData *indexBuffer;
+@property (nonatomic, strong) NSMutableArray *textures;
 @end
 
 @implementation AccordionModel
@@ -61,15 +63,23 @@ const GLubyte latticeIndices[] = {
 @synthesize indexBuffer;
 @synthesize contentOffset;
 @synthesize latticeCount;
+@synthesize textures;
 
 - (id)init
 {
     self = [super init];
     if (self) {
+        _rectIndicies = NULL;
         self.latticeCount = kNumLattices;
         [self updatedLattice];
     }
     return self;
+}
+
+- (void)setLatticeCount:(int)aLatticeCount
+{
+    latticeCount = aLatticeCount;
+    [self createViewRects];
 }
 
 - (GLfloat *)verticies
@@ -97,51 +107,78 @@ const GLubyte latticeIndices[] = {
     return self.indexBufferSize/sizeof(GLushort);
 }
 
+- (FoldingRectIndicies) foldingRectIndiciesForIndex:(int)index
+{
+    return *(_rectIndicies + index);
+}
+
 - (void)updatedLattice
 {
     self.vertexBuffer = nil;
-    self.indexBuffer = nil;
     int vBufferLength = self.latticeCount * kVertsPerLattice * 6 * sizeof(float);
     NSMutableData *vBuffer = [NSMutableData dataWithCapacity:vBufferLength];
-    float latticeWidth = kLatticeWidth;
-    float latticeHeight = kLatticeHeight;
+
     //This line accounts for the scroll amount
     float yStart = (self.latticeCount - 1) * kLatticeHeight/2  - self.contentOffset.y;
     
     for (int i = 0; i < self.latticeCount; i++) {
         float latticeYOffset = i * kLatticeHeight;
-        FoldingRect newLattice = createFoldingRect(latticeWidth, latticeHeight, kLatticeLength, yStart - latticeYOffset);
-//        FoldingRect uiViewRect = createFoldingRect();
+        float yOffset =  yStart - latticeYOffset;
+        FoldingRect newLattice = createFoldingRect(kLatticeWidth, kLatticeHeight, kLatticeLength, 0.f, yOffset);
+        FoldingRect uiViewRect = createFoldingRect(kLatticeWidth/2, kLatticeHeight, kLatticeHeight * .5f, kLatticeWidth * .5f, yOffset);
         
         [vBuffer appendBytes:&newLattice length:sizeof(FoldingRect)];
+        [vBuffer appendBytes:&uiViewRect length:sizeof(FoldingRect)];
         
-    }
-    
-    int iBufferLength = self.latticeCount * kTrianglesPerLattice * 3;
-    NSMutableData *iBuffer = [NSMutableData dataWithCapacity:iBufferLength];
-    for (int i = 0; i < self.latticeCount; i++) {
-        int offset = i * kVertsPerLattice;
-        for (int index = 0; index < kTrianglesPerLattice * 3; index++) {
-            GLushort indexValue = latticeIndices[index] + offset;
-            [iBuffer appendBytes:&indexValue length:sizeof(indexValue)];            
-        }
+        
     }
     
     self.vertexBuffer = vBuffer;
-    self.indexBuffer = iBuffer;
-//    [self printVects];
+    [self printVects];
+}
+
+- (void)createViewRects
+{
+    int iBufferLength = self.latticeCount * kTrianglesPerLattice * 3;
+    NSMutableData *latticeIBuffer = [NSMutableData dataWithCapacity:iBufferLength]    ;
+
+    if (_rectIndicies) {
+        free(_rectIndicies);
+    }
+    _rectIndicies = malloc(self.latticeCount * sizeof(FoldingRectIndicies));
+    for (int i = 0; i < self.latticeCount; i++) {
+        int offset = i * kVertsPerLattice * 2;
+        for (int index = 0; index < kTrianglesPerLattice * 3; index++) {
+            GLushort indexValue = latticeIndices[index] + offset;
+            [latticeIBuffer appendBytes:&indexValue length:sizeof(indexValue)];
+            _rectIndicies[i].indices[index] = latticeIndices[index] + offset + kVertsPerLattice;
+        }
+        _rectIndicies[i].count = kTrianglesPerLattice * 3;
+        _rectIndicies[i].glTextName = [self loadTexture:@"tile_sonyTV"];
+    }
+    self.indexBuffer = latticeIBuffer;
+}
+
+- (int)loadTexture:(NSString *)fileName
+{
+    GLKTextureInfo *texture = nil;
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
+    NSError *error = nil;
+    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&error];
+    [self.textures addObject:textures];
+    NSAssert(error == nil, @"Failed to load texture");
+    return texture.name;
 }
 
 - (void)printVects
 {
-    float vectCount = self.vertexBuffer.length/sizeof(GLKVector3);
-    for (int i = 0; i < vectCount; i += 2) {
-        GLKVector3 position;
-        GLKVector3 normal;
-        [self.vertexBuffer getBytes:&position range:NSMakeRange(i * sizeof(GLKVector3), sizeof(GLKVector3))];
-        [self.vertexBuffer getBytes:&normal range:NSMakeRange((i + 1) * sizeof(GLKVector3), sizeof(GLKVector3))];
-        NSLog(@"vertex: x: %f y: %f z: %f normal x: %f y: %f z: %f", position.x, position.y, position.z, normal.x, normal.y, normal.z);
+    float vectCount = self.vertexBuffer.length/sizeof(Vertex);
+    for (int i = 0; i < vectCount; i++) {
+        Vertex vertex;
+        [self.vertexBuffer getBytes:&vertex range:NSMakeRange(i * sizeof(Vertex), sizeof(Vertex))];
+        NSLog(@"index: %d vertex: x: %f y: %f z: %f normal x: %f y: %f z: %f",i, vertex.position.x, vertex.position.y, vertex.position.z, vertex.normal.x, vertex.normal.y, vertex.normal.z);
     }
+    NSLog(@"*********************************");
     
 }
 
@@ -175,7 +212,7 @@ Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoor
     return newVert;
 }
 
-FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float latticeLength, float latticeY)
+FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float latticeLength, float latticeX, float latticeY)
 {
     //trueY is the unfolded y offset from 
     float topTrueY = latticeHeight/2 + latticeY;
@@ -193,8 +230,8 @@ FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float lat
     float latticeDepth = sqrtf((latticeLength * latticeLength) - (latticeCompressedH * latticeCompressedH));
     
     //front face of lattice is at 0 depth
-    float leftSide = -latticeWidth/2;
-    float rightSide = latticeWidth/2;
+    float leftSide = -latticeWidth/2 + latticeX;
+    float rightSide = latticeWidth/2 + latticeX;
     GLKVector3 topLeftVector = GLKVector3Make(leftSide, compressedTopY, 0.f);
     GLKVector3 topRightVector = GLKVector3Make(rightSide, compressedTopY, 0.f);
     GLKVector3 middleLeftVector = GLKVector3Make(leftSide, compressedMiddleY, -latticeDepth);

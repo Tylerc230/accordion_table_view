@@ -9,6 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "GLKit/GLKit.h"
 
+#define kTrianglesPerLattice 4
+typedef struct {
+    unsigned short indices[kTrianglesPerLattice * 3];
+    int count;
+    int glTextName;
+}FoldingRectIndicies;
+
+
 @interface AccordionModel : NSObject
 @property (nonatomic, readonly) GLfloat *verticies;
 @property (nonatomic, readonly) unsigned int vertexBufferSize;
@@ -18,4 +26,5 @@
 @property (nonatomic, assign) GLKVector3 contentOffset;
 @property (nonatomic, assign) int latticeCount;
 - (void)updatedLattice;
+- (FoldingRectIndicies) foldingRectIndiciesForIndex:(int)index;
 @end

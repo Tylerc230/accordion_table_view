@@ -136,7 +136,7 @@ enum
 
 - (void)update
 {
-//    _rotation += 15.f * self.timeSinceLastUpdate;
+    _rotation += 15.f * self.timeSinceLastUpdate;
     [_model updatedLattice];
     glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
     
@@ -163,7 +163,22 @@ enum
 {
     glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _model.indexBufferSize, _model.indicies, GL_STATIC_DRAW);
+    _baseEffect.texture2d0.enabled = NO;
+    [_baseEffect prepareToDraw];
     glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
+    _baseEffect.texture2d0.enabled = YES;
+    
+    
+    [_baseEffect prepareToDraw];
+    for (int i = 0; i < _model.latticeCount; i++) {
+        FoldingRectIndicies rectIndicies = [_model foldingRectIndiciesForIndex:i];
+        _baseEffect.texture2d0.name = rectIndicies.glTextName;
+        _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
+        _baseEffect.texture2d0.target = GLKTextureTarget2D;
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndicies.indices), rectIndicies.indices, GL_STATIC_DRAW);
+        glDrawElements(GL_TRIANGLES, rectIndicies.count, GL_UNSIGNED_SHORT, 0);
+    }
 }
 
 - (GLKMatrix4)projectionMatrix
@@ -187,18 +202,6 @@ enum
     return GLKVector3Make(screenPoint.x, screenPoint.y, 0.f);
 }
 
-- (void)loadTexture:(NSString *)fileName
-{
-    GLKTextureInfo *texture = nil;
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
-    NSError *error = nil;
-    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&error];
-    _baseEffect.texture2d0.name = texture.name;
-    _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
-    _baseEffect.texture2d0.target = GLKTextureTarget2D;
-    NSAssert(error == nil, @"Failed to load texture");
-}
-
 - (void)setupProjection
 {
     _baseEffect = [[GLKBaseEffect alloc] init];
@@ -213,8 +216,6 @@ enum
     _baseEffect.light0.diffuseColor = kWhiteColor;
     _baseEffect.light0.ambientColor = kWhiteColor;
     _baseEffect.light0.constantAttenuation = kConstantAttenuaion;
-    
-    [self loadTexture:@"tile_sonyTV"];
     
     
     [_baseEffect prepareToDraw];
