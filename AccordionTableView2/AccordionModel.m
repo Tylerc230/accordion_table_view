@@ -8,11 +8,12 @@
 
 #import "AccordionModel.h"
 
-#define kNumLattices 7
+#define kNumLattices 1
 #define kVertsPerLattice 8
 #define kLatticeWidth 120.f
 #define kLatticeHeight 120.f
 #define kLatticeCompressedHeight (kLatticeHeight * .25f)
+#define kLatticeCompressionRation .25f
 //If kLattice height is 2x kLatticeLength you will have no folding 
 #define kLatticeLength (kLatticeHeight * .55f)
 #define kCompressionPointY (kLatticeHeight * .5f)
@@ -39,7 +40,7 @@ typedef struct {
 }FoldingRect;
 
 
-float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
+float calcCompressedY(float trueY, float latticeHeight, float latticeCompressionRatio, float compressionPointY);
 FoldingRect createFoldingRect(float compressionPointY, float latticeWidth, float latticeHeight, float latticeLength, float latticeX, float latticeY, float latticeZ);
 Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords);
 const GLubyte latticeIndices[] = {
@@ -126,7 +127,7 @@ const GLubyte latticeIndices[] = {
         float yOffset =  yStart - latticeYOffset;
         FoldingRect newLattice = createFoldingRect(kLatticeHeight * .5f, kLatticeWidth,   kLatticeHeight,       kLatticeLength,        0.f, yOffset, 0.f);
         float rectH = kLatticeHeight * .5f;
-        FoldingRect uiViewRect = createFoldingRect(rectH * .5, kLatticeWidth/2, rectH, rectH * .5, 0.f, yOffset, 2.f);
+        FoldingRect uiViewRect = createFoldingRect(rectH * .5,           kLatticeWidth/2, rectH,                rectH * .5,            0.f, yOffset, 2.f);
         
         [vBuffer appendBytes:&newLattice length:sizeof(FoldingRect)];
         [vBuffer appendBytes:&uiViewRect length:sizeof(FoldingRect)];
@@ -195,9 +196,8 @@ const GLubyte latticeIndices[] = {
  * @param latticeCompressedHeight the height of a lattice after it has been compressed
  * @param compressionPointY the offset from 0 in the positive or negative direction at which the lattice begins to compress
  */
-float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY)
+float calcCompressedY(float trueY, float latticeHeight, float compressionRatio, float compressionPointY)
 {
-    float compressionRatio = latticeCompressedHeight/latticeHeight;
     float compressedY = trueY;
     //If the vertex has crossed a certain y threshold, we scale its offset from 0 to make 
     //it look compressed like venitian blind or accordion.
@@ -219,14 +219,12 @@ FoldingRect createFoldingRect(float compressionPointY, float latticeWidth, float
 {
     //trueY is the unfolded y offset from 
     float topTrueY = latticeHeight/2 + latticeY;
-    float middleTrueY = 0.f + latticeY;
     float bottomTrueY = -latticeHeight/2 + latticeY;
     
     
-    float compressedTopY = calcCompressedY(topTrueY, latticeHeight, kLatticeCompressedHeight, compressionPointY);
-    float compressedMiddleY = calcCompressedY(middleTrueY, latticeHeight, kLatticeCompressedHeight, compressionPointY);
-    float compressedBottomY = calcCompressedY(bottomTrueY, latticeHeight, kLatticeCompressedHeight, compressionPointY);
-    
+    float compressedTopY = calcCompressedY(topTrueY, latticeHeight, kLatticeCompressionRation, compressionPointY);
+    float compressedBottomY = calcCompressedY(bottomTrueY, latticeHeight, kLatticeCompressionRation, compressionPointY);
+    float compressedMiddleY =     compressedBottomY + (compressedTopY - compressedBottomY)/2;
     //This code ensures the the length of the each half of the lattice stay the same before and after the folding animation
     float latticeCompressedH = (compressedTopY - compressedBottomY)/2;
     //Get the height of the folded or unfolded lattice and use pythag thrm depth = (latticeLeght^2 - height^2)^(.5) or x = (hypotenuse^2 - y^2)^(.5)

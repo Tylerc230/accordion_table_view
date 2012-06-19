@@ -10,6 +10,8 @@
 #import "AccordionModel.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.1f
+//#define kCameraZ -150.f
+#define kCameraZ -400.f
 
 // Attribute index.
 enum
@@ -45,7 +47,7 @@ enum
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-//        _rotation = 45.f;
+        _rotation = 90.f;
     }
     return self;
 }
@@ -142,7 +144,7 @@ enum
     
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 
-    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, -150.f);
+    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, kCameraZ);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
     _baseEffect.transform.modelviewMatrix = modelViewMatrix;
     
@@ -185,10 +187,6 @@ enum
 {
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 1000.f);
-//    GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(-self.view.bounds.size.width/2, 
-//                                                      self.view.bounds.size.width/2,
-//                                                      -self.view.bounds.size.height/2, 
-//                                                      self.view.bounds.size.height/2, 1.0, 200.f);    
     return projectionMatrix;
 }
 
