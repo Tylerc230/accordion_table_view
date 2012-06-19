@@ -194,7 +194,7 @@ enum
     NSError *error = nil;
     texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&error];
     _baseEffect.texture2d0.name = texture.name;
-    _baseEffect.texture2d0.envMode = GLKTextureEnvModeReplace;
+    _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
     _baseEffect.texture2d0.target = GLKTextureTarget2D;
     NSAssert(error == nil, @"Failed to load texture");
 }
