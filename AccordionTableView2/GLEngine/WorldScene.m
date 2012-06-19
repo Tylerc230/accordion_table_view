@@ -9,12 +9,20 @@
 #import "WorldScene.h"
 @interface WorldScene ()
 @property (nonatomic, strong) NSData *vertextBuffer;
-@property (nonatomic, strong) NSMutableArray *objects;
 @end
 
 @implementation WorldScene
 @synthesize vertextBuffer;
 @synthesize objects;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.objects = [NSMutableArray arrayWithCapacity:15];
+    }
+    return self;
+}
 
 - (void)addWorldObject:(WorldObject *)object
 {
@@ -29,5 +37,16 @@
     }
     self.vertextBuffer = vBuff;
 }
+
+- (unsigned int)vertexBufferSize
+{
+    return self.vertextBuffer.length;
+}
+
+- (float *)vertexData
+{
+    return (float*)self.vertextBuffer.bytes;
+}
+
 
 @end

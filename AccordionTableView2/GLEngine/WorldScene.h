@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "WorldObject.h"
 @interface WorldScene : NSObject
+@property (nonatomic, strong) NSMutableArray *objects;
 - (void)addWorldObject:(WorldObject *)object;
 - (void)generateBuffers;
+- (unsigned int)vertexBufferSize;
+- (float *)vertexData;
 @end

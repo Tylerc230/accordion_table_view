@@ -15,4 +15,7 @@
 @property (nonatomic, strong) GLKEffectPropertyTexture *texture;
 @property (nonatomic, strong) NSMutableData *indicies;
 - (void)generateVertices:(NSMutableData *)vertexBuffer;
+- (unsigned int)indexCount;
+- (unsigned int)indexByteSize;
+- (VertexBufferIndex *)indexData;
 @end

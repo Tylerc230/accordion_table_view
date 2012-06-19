@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GLKit/GLKit.h"
-
+#import "WorldScene.h"
 #define kTrianglesPerLattice 4
 typedef struct {
     unsigned short indices[kTrianglesPerLattice * 3];
@@ -20,11 +20,8 @@ typedef struct {
 @interface AccordionModel : NSObject
 @property (nonatomic, readonly) GLfloat *verticies;
 @property (nonatomic, readonly) unsigned int vertexBufferSize;
-@property (nonatomic, readonly) GLushort *indicies;
-@property (nonatomic, readonly) unsigned int indexBufferSize;
-@property (nonatomic, readonly) unsigned int indexCount;
 @property (nonatomic, assign) GLKVector3 contentOffset;
 @property (nonatomic, assign) int latticeCount;
-- (void)updatedLattice;
-- (FoldingRectIndicies) foldingRectIndiciesForIndex:(int)index;
+
+@property (nonatomic, strong) WorldScene *scene;
 @end

@@ -8,6 +8,8 @@
 
 #import "AccordionTableViewController.h"
 #import "AccordionModel.h"
+#import "WorldScene.h"
+#import "WorldObject.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.1f
 //#define kCameraZ -150.f
@@ -47,7 +49,7 @@ enum
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-        _rotation = 90.f;
+//        _rotation = 90.f;
     }
     return self;
 }
@@ -139,7 +141,7 @@ enum
 - (void)update
 {
 //    _rotation += 15.f * self.timeSinceLastUpdate;
-    [_model updatedLattice];
+//    [_model updatedLattice];
     glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
     
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
@@ -148,9 +150,9 @@ enum
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
     _baseEffect.transform.modelviewMatrix = modelViewMatrix;
     
-    [_baseEffect prepareToDraw];
 
-    float stride = sizeof(GLKVector3) * 2 + sizeof(GLKVector2);
+
+    float stride = sizeof(Vertex);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, stride, 0);
     
@@ -165,22 +167,31 @@ enum
 {
     glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _model.indexBufferSize, _model.indicies, GL_STATIC_DRAW);
-    _baseEffect.texture2d0.enabled = NO;
-    [_baseEffect prepareToDraw];
-    glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
-    _baseEffect.texture2d0.enabled = YES;
-    
-    
-    [_baseEffect prepareToDraw];
-    for (int i = 0; i < _model.latticeCount; i++) {
-        FoldingRectIndicies rectIndicies = [_model foldingRectIndiciesForIndex:i];
-        _baseEffect.texture2d0.name = rectIndicies.glTextName;
-        _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
-        _baseEffect.texture2d0.target = GLKTextureTarget2D;
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndicies.indices), rectIndicies.indices, GL_STATIC_DRAW);
-        glDrawElements(GL_TRIANGLES, rectIndicies.count, GL_UNSIGNED_SHORT, 0);
-    }
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _model.indexBufferSize, _model.indicies, GL_STATIC_DRAW);
+//    _baseEffect.texture2d0.enabled = NO;
+//    [_baseEffect prepareToDraw];
+//    glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
+//    _baseEffect.texture2d0.enabled = YES;
+//    
+//    
+//    [_baseEffect prepareToDraw];
+//    for (int i = 0; i < _model.latticeCount; i++) {
+//        FoldingRectIndicies rectIndicies = [_model foldingRectIndiciesForIndex:i];
+//        _baseEffect.texture2d0.name = rectIndicies.glTextName;
+//        _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
+//        _baseEffect.texture2d0.target = GLKTextureTarget2D;
+//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndicies.indices), rectIndicies.indices, GL_STATIC_DRAW);
+//        glDrawElements(GL_TRIANGLES, rectIndicies.count, GL_UNSIGNED_SHORT, 0);
+//    }
+    GLKMatrix4 modelViewMatrix = _baseEffect.transform.modelviewMatrix;
+    for (WorldObject *object in _model.scene.objects) {
+        GLKMatrix4 objectMatrix = GLKMatrix4ScaleWithVector3(modelViewMatrix, object.scale);
+        _baseEffect.transform.modelviewMatrix = objectMatrix;
+        [_baseEffect prepareToDraw];
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, object.indexByteSize, object.indexData, GL_STATIC_DRAW);
+        glDrawElements(GL_TRIANGLES, object.indexCount, GL_UNSIGNED_SHORT, 0);
+        
+    } 
 }
 
 - (GLKMatrix4)projectionMatrix
@@ -223,7 +234,6 @@ enum
 {
     glGenBuffers(1, &_indexVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _model.indexBufferSize, _model.indicies, GL_STATIC_DRAW);
     
     glGenBuffers(1, &_positionVBO);
     glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);

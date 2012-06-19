@@ -23,4 +23,20 @@
 {
     
 }
+
+- (unsigned int)indexCount
+{
+    return self.indicies.length/sizeof(VertexBufferIndex); 
+}
+
+- (unsigned int)indexByteSize
+{
+    return self.indicies.length;
+}
+
+- (VertexBufferIndex *)indexData
+{
+    return (VertexBufferIndex *) self.indicies.bytes;
+}
+
 @end
