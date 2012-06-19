@@ -8,7 +8,7 @@
 
 #import "AccordionModel.h"
 
-#define kNumLattices 1
+#define kNumLattices 7
 #define kVertsPerLattice 8
 #define kLatticeWidth 120.f
 #define kLatticeHeight 120.f
@@ -134,7 +134,7 @@ const GLubyte latticeIndices[] = {
     }
     
     self.vertexBuffer = vBuffer;
-    [self printVects];
+//    [self printVects];
 }
 
 - (void)createViewRects
@@ -164,7 +164,9 @@ const GLubyte latticeIndices[] = {
     GLKTextureInfo *texture = nil;
     NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
     NSError *error = nil;
-    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&error];
+    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:
+               [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] 
+                                           forKey:GLKTextureLoaderOriginBottomLeft]  error:&error];
     [self.textures addObject:textures];
     NSAssert(error == nil, @"Failed to load texture");
     return texture.name;
@@ -242,19 +244,22 @@ FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float lat
     GLKVector3 topNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector)));
     GLKVector3 bottomNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector)));
     
-    GLKVector2 topLeftTextCoord = GLKVector2Make(0.f, 0.f);
-    GLKVector2 topRightTextCoord = GLKVector2Make(0.f, 1.f);
-    GLKVector2 bottomLeftTextCoord = GLKVector2Make(1.0f, 0.f);
-    GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 1.f);
+    GLKVector2 topLeftTextCoord = GLKVector2Make(0.f, 1.f);
+    GLKVector2 topRightTextCoord = GLKVector2Make(1.f, 1.f);
+    GLKVector2 middleLeftTextCoord = GLKVector2Make(0.f, .5f);
+    GLKVector2 middleRightTextCoord = GLKVector2Make(1.f, .5f);
+    
+    GLKVector2 bottomLeftTextCoord = GLKVector2Make(0.0f, 0.f);
+    GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 0.f);
 
     FoldingRect newRect;
     newRect.topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
     newRect.topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
-    newRect.bottomLeft1 = createVert(middleLeftVector, topNormal, bottomLeftTextCoord);
-    newRect.bottomRight1 = createVert(middleRightVector, topNormal, bottomRightTextCoord);
+    newRect.bottomLeft1 = createVert(middleLeftVector, topNormal, middleLeftTextCoord);
+    newRect.bottomRight1 = createVert(middleRightVector, topNormal, middleRightTextCoord);
     
-    newRect.topLeft2 = createVert(middleLeftVector, bottomNormal, topLeftTextCoord);
-    newRect.topRight2 = createVert(middleRightVector, bottomNormal, topRightTextCoord);
+    newRect.topLeft2 = createVert(middleLeftVector, bottomNormal, middleLeftTextCoord);
+    newRect.topRight2 = createVert(middleRightVector, bottomNormal, middleRightTextCoord);
     newRect.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
     newRect.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
     return newRect;

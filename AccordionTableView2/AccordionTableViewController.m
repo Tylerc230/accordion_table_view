@@ -136,7 +136,7 @@ enum
 
 - (void)update
 {
-    _rotation += 15.f * self.timeSinceLastUpdate;
+//    _rotation += 15.f * self.timeSinceLastUpdate;
     [_model updatedLattice];
     glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
     
