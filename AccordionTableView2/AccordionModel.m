@@ -25,12 +25,6 @@ typedef struct {
     GLKVector2 textureCoords;
 }Vertex;
 
-Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords)
-{
-    Vertex newVert = {position, normal, textureCoords};
-    return newVert;
-}
-
 typedef struct {
     //top half
     Vertex topLeft1;
@@ -48,6 +42,8 @@ typedef struct {
 
 
 float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedHeight, float compressionPointY);
+FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float latticeLength, float latticeY);
+Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords);
 const GLubyte latticeIndices[] = {
     0,3,1,
     0,2,3,
@@ -114,49 +110,8 @@ const GLubyte latticeIndices[] = {
     
     for (int i = 0; i < self.latticeCount; i++) {
         float latticeYOffset = i * kLatticeHeight;
-        //trueY is the unfolded y offset from 
-        float topTrueY = latticeHeight/2 + yStart - latticeYOffset;
-        float middleTrueY = 0.f + yStart - latticeYOffset;
-        float bottomTrueY = -latticeHeight/2 + yStart - latticeYOffset;
-        
-        float compressionYPoint = kCompressionPointY;
-        float compressedTopY = calcCompressedY(topTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
-        float compressedMiddleY = calcCompressedY(middleTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
-        float compressedBottomY = calcCompressedY(bottomTrueY, latticeHeight, kLatticeCompressedHeight, compressionYPoint);
-        
-        //This code ensures the the length of the each half of the lattice stay the same before and after the folding animation
-        float latticeCompressedH = (compressedTopY - compressedBottomY)/2;
-        //Get the height of the folded or unfolded lattice and use pythag thrm depth = (latticeLeght^2 - height^2)^(.5) or x = (hypotenuse^2 - y^2)^(.5)
-        float latticeDepth = sqrtf((kLatticeLength * kLatticeLength) - (latticeCompressedH * latticeCompressedH));
-        
-        //front face of lattice is at 0 depth
-        float leftSide = -latticeWidth/2;
-        float rightSide = latticeWidth/2;
-        GLKVector3 topLeftVector = GLKVector3Make(leftSide, compressedTopY, 0.f);
-        GLKVector3 topRightVector = GLKVector3Make(rightSide, compressedTopY, 0.f);
-        GLKVector3 middleLeftVector = GLKVector3Make(leftSide, compressedMiddleY, -latticeDepth);
-        GLKVector3 middleRightVector = GLKVector3Make(rightSide, compressedMiddleY, -latticeDepth);
-        GLKVector3 bottomLeftVector = GLKVector3Make(leftSide, compressedBottomY, 0.f);
-        GLKVector3 bottomRightVector = GLKVector3Make(rightSide, compressedBottomY, 0.f);
-        
-        GLKVector3 topNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector)));
-        GLKVector3 bottomNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector)));
-        
-        GLKVector2 topLeftTextCoord = GLKVector2Make(0.f, 0.f);
-        GLKVector2 topRightTextCoord = GLKVector2Make(0.f, 1.f);
-        GLKVector2 bottomLeftTextCoord = GLKVector2Make(1.0f, 0.f);
-        GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 1.f);
-        
-        FoldingRect newLattice;
-        newLattice.topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
-        newLattice.topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
-        newLattice.bottomLeft1 = createVert(middleLeftVector, topNormal, bottomLeftTextCoord);
-        newLattice.bottomRight1 = createVert(middleRightVector, topNormal, bottomRightTextCoord);
-        
-        newLattice.topLeft2 = createVert(middleLeftVector, bottomNormal, topLeftTextCoord);
-        newLattice.topRight2 = createVert(middleRightVector, bottomNormal, topRightTextCoord);
-        newLattice.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
-        newLattice.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
+        FoldingRect newLattice = createFoldingRect(latticeWidth, latticeHeight, kLatticeLength, yStart - latticeYOffset);
+//        FoldingRect uiViewRect = createFoldingRect();
         
         [vBuffer appendBytes:&newLattice length:sizeof(FoldingRect)];
         
@@ -212,6 +167,61 @@ float calcCompressedY(float trueY, float latticeHeight, float latticeCompressedH
         compressedY = signedCompressionPointY + (trueY - signedCompressionPointY) * compressionRatio;
     }
     return compressedY;
+}
+
+Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords)
+{
+    Vertex newVert = {position, normal, textureCoords};
+    return newVert;
+}
+
+FoldingRect createFoldingRect(float latticeWidth, float latticeHeight, float latticeLength, float latticeY)
+{
+    //trueY is the unfolded y offset from 
+    float topTrueY = latticeHeight/2 + latticeY;
+    float middleTrueY = 0.f + latticeY;
+    float bottomTrueY = -latticeHeight/2 + latticeY;
+    
+    
+    float compressedTopY = calcCompressedY(topTrueY, latticeHeight, kLatticeCompressedHeight, kCompressionPointY);
+    float compressedMiddleY = calcCompressedY(middleTrueY, latticeHeight, kLatticeCompressedHeight, kCompressionPointY);
+    float compressedBottomY = calcCompressedY(bottomTrueY, latticeHeight, kLatticeCompressedHeight, kCompressionPointY);
+    
+    //This code ensures the the length of the each half of the lattice stay the same before and after the folding animation
+    float latticeCompressedH = (compressedTopY - compressedBottomY)/2;
+    //Get the height of the folded or unfolded lattice and use pythag thrm depth = (latticeLeght^2 - height^2)^(.5) or x = (hypotenuse^2 - y^2)^(.5)
+    float latticeDepth = sqrtf((latticeLength * latticeLength) - (latticeCompressedH * latticeCompressedH));
+    
+    //front face of lattice is at 0 depth
+    float leftSide = -latticeWidth/2;
+    float rightSide = latticeWidth/2;
+    GLKVector3 topLeftVector = GLKVector3Make(leftSide, compressedTopY, 0.f);
+    GLKVector3 topRightVector = GLKVector3Make(rightSide, compressedTopY, 0.f);
+    GLKVector3 middleLeftVector = GLKVector3Make(leftSide, compressedMiddleY, -latticeDepth);
+    GLKVector3 middleRightVector = GLKVector3Make(rightSide, compressedMiddleY, -latticeDepth);
+    GLKVector3 bottomLeftVector = GLKVector3Make(leftSide, compressedBottomY, 0.f);
+    GLKVector3 bottomRightVector = GLKVector3Make(rightSide, compressedBottomY, 0.f);
+    
+    GLKVector3 topNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(topLeftVector, topRightVector), GLKVector3Subtract(middleRightVector, topRightVector)));
+    GLKVector3 bottomNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(middleRightVector, bottomRightVector), GLKVector3Subtract(bottomLeftVector, bottomRightVector)));
+    
+    GLKVector2 topLeftTextCoord = GLKVector2Make(0.f, 0.f);
+    GLKVector2 topRightTextCoord = GLKVector2Make(0.f, 1.f);
+    GLKVector2 bottomLeftTextCoord = GLKVector2Make(1.0f, 0.f);
+    GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 1.f);
+
+    FoldingRect newRect;
+    newRect.topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
+    newRect.topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
+    newRect.bottomLeft1 = createVert(middleLeftVector, topNormal, bottomLeftTextCoord);
+    newRect.bottomRight1 = createVert(middleRightVector, topNormal, bottomRightTextCoord);
+    
+    newRect.topLeft2 = createVert(middleLeftVector, bottomNormal, topLeftTextCoord);
+    newRect.topRight2 = createVert(middleRightVector, bottomNormal, topRightTextCoord);
+    newRect.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
+    newRect.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
+    return newRect;
+
 }
 
 
