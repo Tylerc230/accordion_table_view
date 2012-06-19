@@ -30,14 +30,13 @@ enum
     GLuint _program;
     GLuint _positionVBO;
     GLuint _indexVBO;
+    GLKMatrixStackRef _matrixStack;
     
-
-    float _screenWidth;
-    float _screenHeight;
     float _rotation;
     GLKVector2 _currentScreenOffset;
     AccordionModel *_model;
     GLKBaseEffect *_baseEffect;
+    
     
 }
 @property (nonatomic, readonly) GLKMatrix4 projectionMatrix;
@@ -59,13 +58,6 @@ enum
     [super viewDidLoad];
     [self setupGL];
     [self setupModel];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -109,8 +101,6 @@ enum
     glDepthFunc(GL_LEQUAL);
     self.preferredFramesPerSecond = 60;
     
-    _screenWidth = [UIScreen mainScreen].bounds.size.width;
-    _screenHeight = [UIScreen mainScreen].bounds.size.height;
     view.contentScaleFactor = [UIScreen mainScreen].scale;
 
     [self setupProjection];
@@ -141,15 +131,10 @@ enum
 - (void)update
 {
 //    _rotation += 15.f * self.timeSinceLastUpdate;
-//    [_model updatedLattice];
-    glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
     
-    GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 
-    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.f, 0.f, kCameraZ);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
-    _baseEffect.transform.modelviewMatrix = modelViewMatrix;
-    
+    GLKMatrixStackRotate(_matrixStack, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
+    GLKMatrixStackPush(_matrixStack);
 
 
     float stride = sizeof(Vertex);
@@ -167,29 +152,21 @@ enum
 {
     glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _model.indexBufferSize, _model.indicies, GL_STATIC_DRAW);
-//    _baseEffect.texture2d0.enabled = NO;
-//    [_baseEffect prepareToDraw];
-//    glDrawElements(GL_TRIANGLES, _model.indexCount, GL_UNSIGNED_SHORT, 0);
-//    _baseEffect.texture2d0.enabled = YES;
-//    
-//    
-//    [_baseEffect prepareToDraw];
-//    for (int i = 0; i < _model.latticeCount; i++) {
-//        FoldingRectIndicies rectIndicies = [_model foldingRectIndiciesForIndex:i];
-//        _baseEffect.texture2d0.name = rectIndicies.glTextName;
-//        _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
-//        _baseEffect.texture2d0.target = GLKTextureTarget2D;
-//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndicies.indices), rectIndicies.indices, GL_STATIC_DRAW);
-//        glDrawElements(GL_TRIANGLES, rectIndicies.count, GL_UNSIGNED_SHORT, 0);
-//    }
-    GLKMatrix4 modelViewMatrix = _baseEffect.transform.modelviewMatrix;
     for (WorldObject *object in _model.scene.objects) {
-        GLKMatrix4 objectMatrix = GLKMatrix4ScaleWithVector3(modelViewMatrix, object.scale);
-        _baseEffect.transform.modelviewMatrix = objectMatrix;
+
+        GLKMatrixStackTranslateWithVector3(_matrixStack, object.position);
+        GLKMatrixStackScaleWithVector3(_matrixStack, object.scale);
+        _baseEffect.transform.modelviewMatrix = GLKMatrixStackGetMatrix4(_matrixStack);
+        if (object.texture != nil) {
+            _baseEffect.texture2d0.name = object.texture.name;
+        } else {
+            _baseEffect.texture2d0.enabled = NO;
+        }
+
         [_baseEffect prepareToDraw];
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, object.indexByteSize, object.indexData, GL_STATIC_DRAW);
         glDrawElements(GL_TRIANGLES, object.indexCount, GL_UNSIGNED_SHORT, 0);
+        GLKMatrixStackPop(_matrixStack);
         
     } 
 }
@@ -226,8 +203,9 @@ enum
     _baseEffect.light0.ambientColor = kWhiteColor;
     _baseEffect.light0.constantAttenuation = kConstantAttenuaion;
     
-    
-    [_baseEffect prepareToDraw];
+    _matrixStack = GLKMatrixStackCreate(NULL);
+    GLKMatrixStackTranslate(_matrixStack, 0.f, 0.f, kCameraZ);
+    GLKMatrixStackPush(_matrixStack);
 }
 
 - (void)setupBuffers
