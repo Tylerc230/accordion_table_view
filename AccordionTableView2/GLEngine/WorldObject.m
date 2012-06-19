@@ -9,7 +9,6 @@
 #import "WorldObject.h"
 @interface WorldObject ()
 @property (nonatomic, strong) NSMutableArray *subObjects;
-@property (nonatomic, strong) NSMutableData *indicies;
 @end
 
 

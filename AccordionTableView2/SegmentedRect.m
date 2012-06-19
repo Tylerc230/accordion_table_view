@@ -21,10 +21,18 @@ typedef struct {
     Vertex bottomRight2;
 }FoldingRect;
 
+const VertexBufferIndex rectIndicies[] = {
+    0,3,1,
+    0,2,3,
+    4,7,5,
+    4,6,7
+};
+
 @implementation SegmentedRect
 
 - (void)generateVertices:(NSMutableData *)vertexBuffer
 {
+    int currentVertexCount = vertexBuffer.length/sizeof(Vertex);
     //front face of lattice is at 0 depth
     float leftSide = -.5f;
     float rightSide = .5f;
@@ -61,6 +69,15 @@ typedef struct {
     newRect.topRight2 = createVert(middleRightVector, bottomNormal, middleRightTextCoord);
     newRect.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
     newRect.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
+    
+    int numIndices = sizeof(rectIndicies)/sizeof(*rectIndicies);
+    [vertexBuffer appendBytes:&newRect length:sizeof(FoldingRect)];
+    
+    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(GLushort)];
+    for (int i = 0; i < numIndices; i++) {
+        VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
+        [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
+    }
 
 }
 

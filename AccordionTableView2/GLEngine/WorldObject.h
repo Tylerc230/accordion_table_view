@@ -13,5 +13,6 @@
 @property (nonatomic, assign) GLKVector3 position;
 @property (nonatomic, assign) GLKVector3 scale;
 @property (nonatomic, strong) GLKEffectPropertyTexture *texture;
+@property (nonatomic, strong) NSMutableData *indicies;
 - (void)generateVertices:(NSMutableData *)vertexBuffer;
 @end
