@@ -29,6 +29,11 @@
     [self.objects addObject:object];
 }
 
+- (void)clearWorldObjects
+{
+    [self.objects removeAllObjects];
+}
+
 - (void)generateBuffers
 {
     NSMutableData * vBuff = [NSMutableData dataWithCapacity:1000.f];

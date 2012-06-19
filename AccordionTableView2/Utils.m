@@ -12,4 +12,12 @@ Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoor
     return newVert;
 }
 
+void printVertex(Vertex vertex)
+{
+
+    NSLog(@"vertex: x: %f y: %f z: %f normal x: %f y: %f z: %f", vertex.position.x, vertex.position.y, vertex.position.z, vertex.normal.x, vertex.normal.y, vertex.normal.z);
+    
+}
+
+
 

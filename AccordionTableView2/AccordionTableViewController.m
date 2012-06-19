@@ -130,12 +130,6 @@ enum
 
 - (void)update
 {
-//    _rotation += 15.f * self.timeSinceLastUpdate;
-    
-
-    GLKMatrixStackRotate(_matrixStack, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
-    GLKMatrixStackPush(_matrixStack);
-
 
     float stride = sizeof(Vertex);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
@@ -152,11 +146,20 @@ enum
 {
     glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (WorldObject *object in _model.scene.objects) {
+    
+//    _rotation += 15.f * self.timeSinceLastUpdate;
+    
 
+    GLKMatrixStackPush(_matrixStack);
+    GLKMatrixStackRotate(_matrixStack, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);    
+
+    
+    for (WorldObject *object in _model.scene.objects) {
+        GLKMatrixStackPush(_matrixStack);
         GLKMatrixStackTranslateWithVector3(_matrixStack, object.position);
         GLKMatrixStackScaleWithVector3(_matrixStack, object.scale);
         _baseEffect.transform.modelviewMatrix = GLKMatrixStackGetMatrix4(_matrixStack);
+
         if (object.texture != nil) {
             _baseEffect.texture2d0.name = object.texture.name;
         } else {
@@ -168,7 +171,9 @@ enum
         glDrawElements(GL_TRIANGLES, object.indexCount, GL_UNSIGNED_SHORT, 0);
         GLKMatrixStackPop(_matrixStack);
         
-    } 
+    }
+    GLKMatrixStackPop(_matrixStack);
+    
 }
 
 - (GLKMatrix4)projectionMatrix

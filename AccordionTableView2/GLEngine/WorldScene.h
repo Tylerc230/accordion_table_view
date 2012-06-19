@@ -10,6 +10,7 @@
 #import "WorldObject.h"
 @interface WorldScene : NSObject
 @property (nonatomic, strong) NSMutableArray *objects;
+- (void)clearWorldObjects;
 - (void)addWorldObject:(WorldObject *)object;
 - (void)generateBuffers;
 - (unsigned int)vertexBufferSize;

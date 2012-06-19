@@ -15,4 +15,4 @@ typedef struct {
 typedef GLushort VertexBufferIndex;
 
 Vertex createVert(GLKVector3 position, GLKVector3 normal, GLKVector2 textureCoords);
-
+void printVertex(Vertex vertex);

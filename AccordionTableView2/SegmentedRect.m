@@ -7,6 +7,7 @@
 //
 
 #import "SegmentedRect.h"
+
 typedef struct {
     //top half
     Vertex topLeft1;
@@ -28,7 +29,19 @@ const VertexBufferIndex rectIndicies[] = {
     4,6,7
 };
 
+float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY);
+
 @implementation SegmentedRect
+@synthesize originalOffset;
+- (GLKVector3)scale
+{
+
+    GLKVector3 scale = [super scale];
+    float yCompressionPoint = scale.y/2.f;
+    float scaleCoff = calcCompressedHeight(self.position.y, scale.y, .25f, yCompressionPoint);
+    
+    return GLKVector3Make(scale.x, scaleCoff * scale.y , scale.z);
+}
 
 - (void)generateVertices:(NSMutableData *)vertexBuffer
 {
@@ -82,3 +95,25 @@ const VertexBufferIndex rectIndicies[] = {
 }
 
 @end
+
+/* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
+ * When we hit a certain y threshold in the positive or negative direction, we want the accordion to start folding
+ * to its folded (compressed) height.
+ * @param trueY the y offset before any folding occurs
+ * @param latticeHeight the unfolded height
+ * @param latticeCompressedHeight the height of a lattice after it has been compressed
+ * @param compressionPointY the offset from 0 in the positive or negative direction at which the lattice begins to compress
+ */
+float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY)
+{
+    float yScale = 1.f;
+    float bottomY = fabs(trueY) - latticeHeight/2;
+    float delta = compressionPointY - bottomY;
+    if (delta < latticeHeight) {
+        yScale = delta/latticeHeight;
+        if (yScale < compressionRatio) {
+            yScale = compressionRatio;
+        }
+    }
+    return yScale;
+}
