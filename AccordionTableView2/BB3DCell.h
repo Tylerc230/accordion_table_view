@@ -9,5 +9,5 @@
 #import "SegmentedRect.h"
 
 @interface BB3DCell : SegmentedRect
-- (void)createProductView:(UIImage *)productThumbnail;
+- (void)createProductView:(UIImage *)productThumbnail atLocation:(GLKVector3)offset;
 @end

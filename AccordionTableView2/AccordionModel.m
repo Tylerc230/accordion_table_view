@@ -54,7 +54,7 @@
     lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
     lattice.latticeLength = kLatticeLength;
     lattice.originalPosition = GLKVector3Make(0.f, yBeginOffset, 0.f);
-    [lattice createProductView:cellImage];
+    [lattice createProductView:cellImage atLocation:GLKVector3Make(lattice.size.x/4, 0.f, 10.f)];
     [self addWorldObject:lattice];
     yBeginOffset += kLatticeHeight;
 }
