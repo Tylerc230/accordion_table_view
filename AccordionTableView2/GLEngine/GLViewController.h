@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GLKit/GLKit.h"
+#import "WorldScene.h"
 
-@interface GLViewController : UIViewController
-
+@interface GLViewController : GLKViewController
+@property (nonatomic, strong) WorldScene *scene;
+- (GLKVector3)worldPointFromScreenPoint:(GLKVector2)screenPoint;
 @end
