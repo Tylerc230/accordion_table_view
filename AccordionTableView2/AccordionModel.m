@@ -9,6 +9,7 @@
 #import "AccordionModel.h"
 #import "Utils.h"
 #import "BB3DCell.h"
+#import "QuartzCore/CALayer.h"
 
 #define kNumLattices 7
 #define kVertsPerLattice 8
@@ -17,64 +18,52 @@
 #define kLatticeLength 46.f
 
 @interface AccordionModel ()
-@property (nonatomic, strong) NSMutableArray *textures;
+{
+    float yBeginOffset;
+}
 @end
 
 @implementation AccordionModel
-@synthesize scene;
 @synthesize contentOffset;
-@synthesize latticeCount;
-@synthesize textures;
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        self.scene = [[WorldScene alloc] init];
-        self.latticeCount = kNumLattices;
     }
     return self;
-}
-
-- (void)setLatticeCount:(int)aLatticeCount
-{
-    latticeCount = aLatticeCount;
-    [self.scene clearWorldObjects];
-    [self createLattices:latticeCount];
 }
 
 - (void)setContentOffset:(GLKVector3)aContentOffset
 {
     contentOffset = aContentOffset;
     GLKVector3 yOffset = GLKVector3Make(0.f, -contentOffset.y, 0.f);
-    for (SegmentedRect * rect in self.scene.objects) {
+    for (SegmentedRect * rect in self.objects) {
         rect.offset = yOffset;
     }
 }
 
-- (GLfloat *)verticies
+- (void)addCell:(UIView *)cell
 {
-    return [self.scene vertexData];
+    UIImage *cellImage = [self imageForView:cell];
+    BB3DCell *lattice = [[BB3DCell alloc] init];
+    lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
+    lattice.latticeLength = kLatticeLength;
+    lattice.originalPosition = GLKVector3Make(0.f, yBeginOffset, 0.f);
+    [lattice createProductView:cellImage];
+    [self addWorldObject:lattice];
+    yBeginOffset += kLatticeHeight;
 }
 
-- (unsigned int)vertexBufferSize
+- (UIImage *)imageForView:(UIView *)view
 {
-    return [self.scene vertexBufferSize];
+    UIGraphicsBeginImageContext(view.bounds.size);
+    [[view layer] renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return  screenShot;
 }
 
-
-- (void)createLattices:(unsigned int)numLattices
-{
-    for (int i = 0; i < numLattices; i++) {
-        BB3DCell *lattice = [[BB3DCell alloc] init];
-        lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
-        lattice.latticeLength = kLatticeLength;
-        lattice.originalPosition = GLKVector3Make(0.f, i * kLatticeHeight, 0.f);
-        [self.scene addWorldObject:lattice];
-
-    }
-    [self.scene generateBuffers];
-}
 
 @end
 

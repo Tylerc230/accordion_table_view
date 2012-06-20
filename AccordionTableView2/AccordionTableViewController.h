@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "GLKit/GLKit.h"
+#import "GLViewController.h"
 
-@interface AccordionTableViewController : GLKViewController
+@interface AccordionTableViewController : GLViewController
 
 @end

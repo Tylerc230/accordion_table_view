@@ -170,6 +170,16 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     self.texture = texture;
 }
 
+- (void)loadTextureFromImage:(UIImage *)image
+{
+    NSError *error = nil;
+    GLKTextureInfo *texture = [GLKTextureLoader textureWithCGImage:image.CGImage options:
+                               [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]  forKey:GLKTextureLoaderOriginBottomLeft] 
+                                                             error:&error];
+    NSAssert(error == nil, @"Failed to load image");
+    self.texture = texture;
+}
+
 - (void)updateScaleCoeff
 {
     GLKVector3 size = self.size;
