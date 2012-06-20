@@ -37,9 +37,11 @@
 
 - (void)updateWorld
 {
+    
     for (WorldObject *object in self.objects) {
         [object updateVerticies:self.vertexBuffer];
     }
+    [self.vertexBuffer resetUpdateCount];
 }
 
 - (void)generateBuffers

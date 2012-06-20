@@ -12,6 +12,8 @@
 @property (nonatomic, assign) GLKVector3 originalPosition;
 @property (nonatomic, assign) GLKVector3 offset;
 @property (nonatomic, assign) float latticeLength;
+@property (nonatomic, assign) float uncompressedScale;
+@property (nonatomic, assign) float compressedScale;
 - (void)loadTexture:(NSString *)fileName;
 - (void)loadTextureFromImage:(UIImage *)image;
 @end

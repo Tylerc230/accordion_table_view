@@ -42,6 +42,8 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 @synthesize originalPosition;
 @synthesize latticeLength;
 @synthesize offset;
+@synthesize compressedScale;
+@synthesize uncompressedScale;
 
 - (id)init
 {
@@ -96,6 +98,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 - (void)generateVertices:(VertexBuffer *)vertexBuffer
 {
     [super generateVertices:vertexBuffer];
+    [vertexBuffer objectCreationBegin];
     int currentVertexCount = vertexBuffer.vertexCount;
     GLKVector3 size = self.size;
     //front face of lattice is at 0 depth
@@ -143,11 +146,15 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
         VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
         [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
     }
-
+    [vertexBuffer objectCreationEnd];
 }
 
 - (void)updateVerticies:(VertexBuffer *)vertexBuffer
 {
+    [vertexBuffer objectUpdateBegin];
+    FoldingRect *objectVertices = (FoldingRect *)[vertexBuffer vertexDataForCurrentObject];
+    
+    [vertexBuffer objectUpdateEnd];
     
 }
 

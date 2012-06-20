@@ -14,5 +14,12 @@
 @property (nonatomic, readonly) unsigned int vertexBufferSize;
 
 - (VertexBufferIndex)addVerticies:(Vertex *)vertexArray count:(unsigned int)numVertices;
+- (Vertex *)vertexDataForCurrentObject;
+- (void)objectCreationBegin;
+- (void)objectCreationEnd;
+- (void)objectUpdateEnd;
+- (void)objectUpdateBegin;
+- (void)resetUpdateCount;
+
 
 @end

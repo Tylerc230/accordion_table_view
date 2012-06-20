@@ -10,12 +10,14 @@
 @interface VertexBuffer ()
 @property (nonatomic, strong) NSMutableData *vertexData;
 @property (nonatomic, strong) NSMutableArray *objectData;
+@property (nonatomic, assign) unsigned int objectsUpdated;
 @end
 
 @implementation VertexBuffer
 @synthesize vertexData;
 @synthesize objectData;
 @synthesize vertexCount;
+@synthesize objectsUpdated;
 
 - (id)init
 {
@@ -23,6 +25,7 @@
     if (self) {
         self.vertexData = [NSMutableData dataWithCapacity:10];
         self.objectData = [NSMutableArray arrayWithCapacity:10];
+        [self resetUpdateCount];
     }
     return self;
 }
@@ -43,6 +46,39 @@
         finishedObjectRange.length = length;
         [self.objectData replaceObjectAtIndex:self.objectData.count - 1 withObject:[NSValue valueWithRange:finishedObjectRange]];
     }
+}
+
+- (void)objectUpdateBegin
+{
+    
+}
+
+- (void)objectUpdateEnd
+{
+    self.objectsUpdated++;
+}
+
+- (void)resetUpdateCount
+{
+    self.objectsUpdated = 0;
+}
+
+- (unsigned int)vertexCountForCurrentObject
+{
+    NSRange currentObjectRange = [self rangeForCurrentObject];
+    return currentObjectRange.length;
+}
+
+- (Vertex *)vertexDataForCurrentObject
+{
+    Vertex * vertexArray = (Vertex *)self.vertexData.mutableBytes;
+    NSRange currentRange = [self rangeForCurrentObject];
+    return vertexArray + currentRange.location;
+}
+
+- (NSRange)rangeForCurrentObject
+{
+    return [[self.objectData objectAtIndex:self.objectsUpdated] rangeValue];
 }
 
 - (VertexBufferIndex)addVerticies:(Vertex *)vertexArray count:(unsigned int)numVertices{
