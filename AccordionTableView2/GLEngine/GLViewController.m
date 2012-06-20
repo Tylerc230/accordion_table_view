@@ -33,7 +33,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+//        _rotation = 70.f;
     }
     return self;
 }
@@ -94,7 +94,7 @@
 
 - (void)update
 {
-    
+//    _rotation += 45.f * self.timeSinceLastUpdate;
     float stride = sizeof(Vertex);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid *)offsetof(Vertex, position));

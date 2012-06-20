@@ -10,6 +10,7 @@
 #import "AccordionModel.h"
 #import "WorldScene.h"
 #import "WorldObject.h"
+
 @interface AccordionTableViewController ()
 {
      GLKVector2 _currentScreenOffset;   
@@ -25,6 +26,11 @@
 //        _rotation = 70.f;
     }
     return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -53,13 +59,21 @@
 #pragma mark - public methods
 - (void)setupModel
 {
-    self.scene = [[AccordionModel alloc] init];
+    AccordionModel *model = [[AccordionModel alloc] init];
+    UIView * cell = [[[NSBundle mainBundle] loadNibNamed:@"ProductCell" owner:self options:nil] lastObject];
+    [model addCell:cell];
+    
+    self.scene = model;
+    [model generateBuffers];
 }
 
 - (AccordionModel *)accordionModel
 {
     return (AccordionModel*) super.scene;
 }
+
+#pragma mark - Private methods
+
 
 
 

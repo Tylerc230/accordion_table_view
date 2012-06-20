@@ -14,18 +14,18 @@
 {
     self = [super init];
     if (self) {
-        [self createSubObjects];
     }
     return self;
 }
 
-- (void)createSubObjects
+- (void)createProductView:(UIImage *)productThumbnail
 {
     SegmentedRect * productView = [[SegmentedRect alloc] init];
     productView.size = GLKVector3Make(40.f, 20.f, 1.f);
+//    productView.size = GLKVector3Make(productThumbnail.size.width/32, productThumbnail.size.height/32, 1.f);    
     productView.latticeLength = 10.05f;
     productView.originalPosition = GLKVector3Make(30.f, 0.f, 0.f);
-    [productView loadTexture:@"tile_sonyTV"];
+    [productView loadTextureFromImage:productThumbnail];
     [self addSubObject:productView];
 }
 

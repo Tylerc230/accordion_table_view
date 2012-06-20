@@ -1,13 +1,13 @@
 //
-//  BB3DCell.h
+//  ProductCell.h
 //  AccordionTableView2
 //
 //  Created by Tyler Casselman on 6/19/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "SegmentedRect.h"
+#import <UIKit/UIKit.h>
 
-@interface BB3DCell : SegmentedRect
-- (void)createProductView:(UIImage *)productThumbnail;
+@interface ProductCell : UIView
+
 @end

@@ -9,6 +9,7 @@
 #import "AccordionModel.h"
 #import "Utils.h"
 #import "BB3DCell.h"
+#import "QuartzCore/CALayer.h"
 
 #define kNumLattices 7
 #define kVertsPerLattice 8
@@ -17,28 +18,20 @@
 #define kLatticeLength 46.f
 
 @interface AccordionModel ()
-@property (nonatomic, strong) NSMutableArray *textures;
+{
+    float yBeginOffset;
+}
 @end
 
 @implementation AccordionModel
 @synthesize contentOffset;
-@synthesize latticeCount;
-@synthesize textures;
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        self.latticeCount = kNumLattices;
     }
     return self;
-}
-
-- (void)setLatticeCount:(int)aLatticeCount
-{
-    latticeCount = aLatticeCount;
-    [self clearWorldObjects];
-    [self createLattices:latticeCount];
 }
 
 - (void)setContentOffset:(GLKVector3)aContentOffset
@@ -50,23 +43,27 @@
     }
 }
 
-- (GLfloat *)verticies
+- (void)addCell:(UIView *)cell
 {
-    return [self vertexData];
+    UIImage *cellImage = [self imageForView:cell];
+    BB3DCell *lattice = [[BB3DCell alloc] init];
+    lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
+    lattice.latticeLength = kLatticeLength;
+    lattice.originalPosition = GLKVector3Make(0.f, yBeginOffset, 0.f);
+    [lattice createProductView:cellImage];
+    [self addWorldObject:lattice];
+    yBeginOffset += kLatticeHeight;
 }
 
-- (void)createLattices:(unsigned int)numLattices
+- (UIImage *)imageForView:(UIView *)view
 {
-    for (int i = 0; i < numLattices; i++) {
-        BB3DCell *lattice = [[BB3DCell alloc] init];
-        lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
-        lattice.latticeLength = kLatticeLength;
-        lattice.originalPosition = GLKVector3Make(0.f, i * kLatticeHeight, 0.f);
-        [self addWorldObject:lattice];
-
-    }
-    [self generateBuffers];
+    UIGraphicsBeginImageContext(view.bounds.size);
+    [[view layer] renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *screenShot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return  screenShot;
 }
+
 
 @end
 
