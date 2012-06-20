@@ -8,7 +8,7 @@
 
 #import "WorldObject.h"
 @interface WorldObject ()
-@property (nonatomic, strong) NSMutableArray *subObjects;
+
 @end
 
 
@@ -19,9 +19,20 @@
 @synthesize subObjects;
 @synthesize indicies;
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.subObjects = [NSMutableArray arrayWithCapacity:5];
+    }
+    return self;
+}
+
 - (void)generateVertices:(NSMutableData *)vertexBuffer
 {
-    
+    for (WorldObject *subObject in self.subObjects) {
+        [subObject generateVertices:vertexBuffer];
+    }
 }
 
 - (unsigned int)indexCount
@@ -37,6 +48,11 @@
 - (VertexBufferIndex *)indexData
 {
     return (VertexBufferIndex *) self.indicies.bytes;
+}
+
+- (void)addSubObject:(WorldObject *)object
+{
+    [self.subObjects addObject:object];
 }
 
 @end

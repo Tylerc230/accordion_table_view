@@ -8,7 +8,7 @@
 
 #import "AccordionModel.h"
 #import "Utils.h"
-#import "SegmentedRect.h"
+#import "BB3DCell.h"
 
 #define kNumLattices 3
 #define kVertsPerLattice 8
@@ -65,26 +65,13 @@
 - (void)createLattices:(unsigned int)numLattices
 {
     for (int i = 0; i < numLattices; i++) {
-        SegmentedRect *lattice = [[SegmentedRect alloc] init];
+        BB3DCell *lattice = [[BB3DCell alloc] init];
         lattice.scale = GLKVector3Make(kLatticeWidth, kLatticeHeight, 50.f);
         lattice.originalPosition = GLKVector3Make(0.f, i * kLatticeHeight, 0.f);
         [self.scene addWorldObject:lattice];
 
     }
     [self.scene generateBuffers];
-}
-
-- (int)loadTexture:(NSString *)fileName
-{
-    GLKTextureInfo *texture = nil;
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
-    NSError *error = nil;
-    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:
-               [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] 
-                                           forKey:GLKTextureLoaderOriginBottomLeft]  error:&error];
-    [self.textures addObject:textures];
-    NSAssert(error == nil, @"Failed to load texture");
-    return texture.name;
 }
 
 @end

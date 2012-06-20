@@ -44,6 +44,8 @@
 		7080E23B158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */; };
 		7080E23C158FD6F400FCFC21 /* tile_sonyTV@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */; };
 		70E2E915158FA619004DE63C /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70E2E914158FA619004DE63C /* MainWindow-iPad.xib */; };
+		70EA9EC31591439700AF4FF2 /* BB3DCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EA9EC21591439700AF4FF2 /* BB3DCell.m */; };
+		70EA9EC41591439700AF4FF2 /* BB3DCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 70EA9EC21591439700AF4FF2 /* BB3DCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +96,8 @@
 		7080E237158FD6F400FCFC21 /* tile_sonyTV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_sonyTV.png; sourceTree = "<group>"; };
 		7080E238158FD6F400FCFC21 /* tile_sonyTV@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tile_sonyTV@2x.png"; sourceTree = "<group>"; };
 		70E2E914158FA619004DE63C /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		70EA9EC11591439700AF4FF2 /* BB3DCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BB3DCell.h; sourceTree = "<group>"; };
+		70EA9EC21591439700AF4FF2 /* BB3DCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BB3DCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +215,8 @@
 				703E516F158A8E770092B497 /* AccordionModel.m */,
 				707CDA4B1590E642001B78A4 /* SegmentedRect.h */,
 				707CDA4C1590E642001B78A4 /* SegmentedRect.m */,
+				70EA9EC11591439700AF4FF2 /* BB3DCell.h */,
+				70EA9EC21591439700AF4FF2 /* BB3DCell.m */,
 			);
 			name = AccordionTableView;
 			sourceTree = "<group>";
@@ -361,6 +367,7 @@
 				707CDA491590E383001B78A4 /* GLViewController.m in Sources */,
 				707CDA4D1590E642001B78A4 /* SegmentedRect.m in Sources */,
 				707CDA501590E9E2001B78A4 /* Utils.m in Sources */,
+				70EA9EC31591439700AF4FF2 /* BB3DCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,6 +383,7 @@
 				707CDA4A1590E383001B78A4 /* GLViewController.m in Sources */,
 				707CDA4E1590E642001B78A4 /* SegmentedRect.m in Sources */,
 				707CDA511590E9E2001B78A4 /* Utils.m in Sources */,
+				70EA9EC41591439700AF4FF2 /* BB3DCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

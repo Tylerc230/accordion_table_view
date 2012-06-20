@@ -12,10 +12,13 @@
 @interface WorldObject : NSObject
 @property (nonatomic, assign) GLKVector3 position;
 @property (nonatomic, assign) GLKVector3 scale;
-@property (nonatomic, strong) GLKEffectPropertyTexture *texture;
+@property (nonatomic, strong) GLKTextureInfo *texture;
 @property (nonatomic, strong) NSMutableData *indicies;
+@property (nonatomic, strong) NSMutableArray *subObjects;
+
 - (void)generateVertices:(NSMutableData *)vertexBuffer;
 - (unsigned int)indexCount;
 - (unsigned int)indexByteSize;
 - (VertexBufferIndex *)indexData;
+- (void)addSubObject:(WorldObject *)object;
 @end

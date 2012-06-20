@@ -12,7 +12,8 @@
 #import "WorldObject.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.1f
-#define kCameraZ -150.f
+//#define kCameraZ -150.f
+#define kCameraZ -400.f
 @interface AccordionTableViewController ()
 {
     EAGLContext *_context;
@@ -37,7 +38,7 @@
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-        //        _rotation = 75.f;
+        _rotation = 75.f;
     }
     return self;
 }
@@ -133,36 +134,48 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClearColor(1.f, 1.f, 1.f, 1.0);
+//    glClearColor(1.f, 1.f, 1.f, 1.0);
+    glClearColor(.5f, .5f, .5f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-//    _rotation += 15.f * self.timeSinceLastUpdate;
+    _rotation += 15.f * self.timeSinceLastUpdate;
     
 
     GLKMatrixStackPush(_matrixStack);
-    GLKMatrixStackRotate(_matrixStack, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);    
-
-    
+    GLKMatrixStackRotate(_matrixStack, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
     for (WorldObject *object in _model.scene.objects) {
-        GLKMatrixStackPush(_matrixStack);
-        GLKMatrixStackTranslateWithVector3(_matrixStack, object.position);
-        GLKMatrixStackScaleWithVector3(_matrixStack, object.scale);
-        _baseEffect.transform.modelviewMatrix = GLKMatrixStackGetMatrix4(_matrixStack);
-
-        if (object.texture != nil) {
-            _baseEffect.texture2d0.name = object.texture.name;
-        } else {
-            _baseEffect.texture2d0.enabled = NO;
-        }
-
-        [_baseEffect prepareToDraw];
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, object.indexByteSize, object.indexData, GL_STATIC_DRAW);
-        glDrawElements(GL_TRIANGLES, object.indexCount, GL_UNSIGNED_SHORT, 0);
-        GLKMatrixStackPop(_matrixStack);
-        
+        [self drawObject:object];
     }
     GLKMatrixStackPop(_matrixStack);
     
+}
+
+- (void)drawObject:(WorldObject *)object
+{
+    GLKMatrixStackPush(_matrixStack);
+    GLKMatrixStackTranslateWithVector3(_matrixStack, object.position);
+    GLKMatrixStackScaleWithVector3(_matrixStack, object.scale);
+    _baseEffect.transform.modelviewMatrix = GLKMatrixStackGetMatrix4(_matrixStack);
+
+
+    if (object.texture != nil) {
+        _baseEffect.texture2d0.enabled = YES;
+        _baseEffect.texture2d0.name = object.texture.name;
+    } else {
+        _baseEffect.texture2d0.enabled = NO;
+    }
+    
+    [_baseEffect prepareToDraw];
+
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, object.indexByteSize, object.indexData, GL_STATIC_DRAW);
+    glDrawElements(GL_TRIANGLES, object.indexCount, GL_UNSIGNED_SHORT, 0);
+
+    
+
+    for (WorldObject *subObject in object.subObjects) {
+        [self drawObject:subObject];
+    }
+    GLKMatrixStackPop(_matrixStack);
 }
 
 - (GLKMatrix4)projectionMatrix

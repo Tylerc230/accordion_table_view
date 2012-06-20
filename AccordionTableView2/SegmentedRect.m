@@ -77,6 +77,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 - (void)generateVertices:(NSMutableData *)vertexBuffer
 {
+    [super generateVertices:vertexBuffer];
     int currentVertexCount = vertexBuffer.length/sizeof(Vertex);
     //front face of lattice is at 0 depth
     float leftSide = -.5f;
@@ -136,6 +137,18 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 {
     originalPosition = anOriginalPosition;
     [self updateScaleCoeff];
+}
+
+- (void)loadTexture:(NSString *)fileName
+{
+    GLKTextureInfo *texture = nil;
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
+    NSError *error = nil;
+    texture = [GLKTextureLoader textureWithContentsOfFile:filePath options:
+               [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] 
+                                           forKey:GLKTextureLoaderOriginBottomLeft]  error:&error];
+    NSAssert(error == nil, @"Failed to load texture");
+    self.texture = texture;
 }
 
 - (void)updateScaleCoeff
