@@ -45,6 +45,10 @@
 
 - (void)addCell:(UIView *)cell
 {
+//    Square * square = [[Square alloc] init];
+//    square.size = GLKVector3Make(100.f, 100.f, 0.f);
+//    [self addWorldObject:square];
+    
     UIImage *cellImage = [self imageForView:cell];
     BB3DCell *lattice = [[BB3DCell alloc] init];
     lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);

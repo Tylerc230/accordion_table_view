@@ -8,9 +8,8 @@
 #import "GLViewController.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.03f
-//#define kCameraZ -150.f
 #define kCameraZ -602.76
-//#define kCameraZ -400.f
+#define kCameraAngle GLKMathDegreesToRadians(65.f)
 
 
 @interface GLViewController ()
@@ -68,7 +67,7 @@
     
     view.contentScaleFactor = [UIScreen mainScreen].scale;
     
-    [self setupProjection];
+    [self setupBaseEffect];
     
     glUseProgram(_program);
     
@@ -155,7 +154,7 @@
 - (GLKMatrix4)projectionMatrix
 {
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 10000.f);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(kCameraAngle, aspect, 1.0f, 10000.f);
     return projectionMatrix;
 //    float hWidth = self.view.bounds.size.width/2;
 //    float hHeight =self.view.bounds.size.height/2;
@@ -172,7 +171,7 @@
     return GLKVector3Make(screenPoint.x, screenPoint.y, 0.f);
 }
 
-- (void)setupProjection
+- (void)setupBaseEffect
 {
     _baseEffect = [[GLKBaseEffect alloc] init];
     _baseEffect.transform.projectionMatrix = self.projectionMatrix;
@@ -190,8 +189,9 @@
 //    _baseEffect.material.ambientColor = kWhiteColor;
     _baseEffect.material.shininess = 5.f;
     
+    float cameraZ = -(self.view.bounds.size.height/2)/tan(kCameraAngle/2);
     _matrixStack = GLKMatrixStackCreate(NULL);
-    GLKMatrixStackTranslate(_matrixStack, 0.f, 0.f, kCameraZ);
+    GLKMatrixStackTranslate(_matrixStack, 0.f, 0.f, cameraZ);
     GLKMatrixStackPush(_matrixStack);
 }
 
