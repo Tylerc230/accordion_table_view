@@ -143,7 +143,7 @@
 
     GLKMatrixStackPush(_matrixStack);
     GLKMatrixStackRotate(_matrixStack, GLKMathDegreesToRadians(_rotation), 0.f, 1.f, 0.f);
-    for (WorldObject *object in _model.scene.objects) {
+    for (WorldObject *object in _model.objects) {
         [self drawObject:object];
     }
     GLKMatrixStackPop(_matrixStack);
@@ -224,7 +224,7 @@
     
     glGenBuffers(1, &_positionVBO);
     glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
-    glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.verticies, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, _model.vertexBufferSize, _model.vertexData, GL_STATIC_DRAW);
         
 }
 

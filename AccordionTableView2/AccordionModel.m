@@ -21,7 +21,6 @@
 @end
 
 @implementation AccordionModel
-@synthesize scene;
 @synthesize contentOffset;
 @synthesize latticeCount;
 @synthesize textures;
@@ -30,7 +29,6 @@
 {
     self = [super init];
     if (self) {
-        self.scene = [[WorldScene alloc] init];
         self.latticeCount = kNumLattices;
     }
     return self;
@@ -39,7 +37,7 @@
 - (void)setLatticeCount:(int)aLatticeCount
 {
     latticeCount = aLatticeCount;
-    [self.scene clearWorldObjects];
+    [self clearWorldObjects];
     [self createLattices:latticeCount];
 }
 
@@ -47,21 +45,15 @@
 {
     contentOffset = aContentOffset;
     GLKVector3 yOffset = GLKVector3Make(0.f, -contentOffset.y, 0.f);
-    for (SegmentedRect * rect in self.scene.objects) {
+    for (SegmentedRect * rect in self.objects) {
         rect.offset = yOffset;
     }
 }
 
 - (GLfloat *)verticies
 {
-    return [self.scene vertexData];
+    return [self vertexData];
 }
-
-- (unsigned int)vertexBufferSize
-{
-    return [self.scene vertexBufferSize];
-}
-
 
 - (void)createLattices:(unsigned int)numLattices
 {
@@ -70,10 +62,10 @@
         lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
         lattice.latticeLength = kLatticeLength;
         lattice.originalPosition = GLKVector3Make(0.f, i * kLatticeHeight, 0.f);
-        [self.scene addWorldObject:lattice];
+        [self addWorldObject:lattice];
 
     }
-    [self.scene generateBuffers];
+    [self generateBuffers];
 }
 
 @end
