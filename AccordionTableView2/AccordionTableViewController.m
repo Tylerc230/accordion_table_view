@@ -66,7 +66,6 @@
     }
 
     self.scene = model;
-    [model generateBuffers];
 }
 
 - (AccordionModel *)accordionModel

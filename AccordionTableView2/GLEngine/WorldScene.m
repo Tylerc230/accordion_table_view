@@ -7,12 +7,13 @@
 //
 
 #import "WorldScene.h"
+#import "VertexBuffer.h"
 @interface WorldScene ()
-@property (nonatomic, strong) NSData *vertextBuffer;
+@property (nonatomic, strong) VertexBuffer *vertexBuffer;
 @end
 
 @implementation WorldScene
-@synthesize vertextBuffer;
+@synthesize vertexBuffer;
 @synthesize objects;
 
 - (id)init
@@ -34,23 +35,29 @@
     [self.objects removeAllObjects];
 }
 
+- (void)updateWorld
+{
+    for (WorldObject *object in self.objects) {
+        [object updateVerticies:self.vertexBuffer];
+    }
+}
+
 - (void)generateBuffers
 {
-    NSMutableData * vBuff = [NSMutableData dataWithCapacity:1000.f];
+    self.vertexBuffer = [[VertexBuffer alloc] init];
     for (WorldObject *object in self.objects) {
-        [object generateVertices:vBuff];
+        [object generateVertices:self.vertexBuffer];
     }
-    self.vertextBuffer = vBuff;
 }
 
 - (unsigned int)vertexBufferSize
 {
-    return self.vertextBuffer.length;
+    return self.vertexBuffer.vertexBufferSize;
 }
 
 - (float *)vertexData
 {
-    return (float*)self.vertextBuffer.bytes;
+    return self.vertexBuffer.vertexFloatArray;
 }
 
 

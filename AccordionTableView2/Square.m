@@ -10,18 +10,18 @@
 
 @implementation Square
 
-- (void)generateVertices:(NSMutableData *)vertexBuffer
+- (void)generateVertices:(VertexBuffer *)vertexBuffer
 {
-    int vertexCount = vertexBuffer.length/sizeof(Vertex);
+    int vertexCount = vertexBuffer.vertexCount;
     GLKVector3 normal = GLKVector3Make(0.f, 0.f, 1.f);
     Vertex leftTop = createVert(GLKVector3Make(-self.size.x/2, self.size.y/2, 0.f),normal , GLKVector2Make(0.f, 1.f));
     Vertex rightTop = createVert(GLKVector3Make(self.size.x/2, self.size.y/2, 0.f),normal , GLKVector2Make(1.f, 1.f));
     Vertex leftBottom = createVert(GLKVector3Make(-self.size.x/2, -self.size.y/2, 0.f),normal , GLKVector2Make(0.f, 0.f));
     Vertex rightBottom = createVert(GLKVector3Make(self.size.x/2, -self.size.y/2, 0.f),normal , GLKVector2Make(1.f, 0.f));
-    [vertexBuffer appendBytes:&leftTop length:sizeof(Vertex)];
-    [vertexBuffer appendBytes:&rightTop length:sizeof(Vertex)];
-    [vertexBuffer appendBytes:&leftBottom length:sizeof(Vertex)];
-    [vertexBuffer appendBytes:&rightBottom length:sizeof(Vertex)];
+    [vertexBuffer addVerticies:&leftTop count:1];
+    [vertexBuffer addVerticies:&rightTop count:1];
+    [vertexBuffer addVerticies:&leftBottom count:1];
+    [vertexBuffer addVerticies:&rightBottom count:1];
     
 
     self.indicies = [NSMutableData dataWithLength:6];

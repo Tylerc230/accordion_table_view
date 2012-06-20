@@ -94,6 +94,7 @@
 - (void)update
 {
 //    _rotation += 45.f * self.timeSinceLastUpdate;
+    [self.scene updateWorld];
     float stride = sizeof(Vertex);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid *)offsetof(Vertex, position));
@@ -197,6 +198,7 @@
 
 - (void)setupBuffers
 {
+    [self.scene generateBuffers];
     glGenBuffers(1, &_indexVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
     

@@ -93,10 +93,10 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     return GLKVector3Add(self.offset, self.originalPosition);    
 }
 
-- (void)generateVertices:(NSMutableData *)vertexBuffer
+- (void)generateVertices:(VertexBuffer *)vertexBuffer
 {
     [super generateVertices:vertexBuffer];
-    int currentVertexCount = vertexBuffer.length/sizeof(Vertex);
+    int currentVertexCount = vertexBuffer.vertexCount;
     GLKVector3 size = self.size;
     //front face of lattice is at 0 depth
     float leftSide = -.5f * size.x;
@@ -136,9 +136,9 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     newRect.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
     
     int numIndices = sizeof(rectIndicies)/sizeof(*rectIndicies);
-    [vertexBuffer appendBytes:&newRect length:sizeof(FoldingRect)];
+    [vertexBuffer addVerticies:(Vertex*)&newRect count:sizeof(FoldingRect)/sizeof(Vertex)];
     
-    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(GLushort)];
+    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(VertexBufferIndex)];
     for (int i = 0; i < numIndices; i++) {
         VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
         [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
@@ -146,7 +146,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 }
 
-- (void)updateVerticies:(NSMutableData *)vertexBuffer
+- (void)updateVerticies:(VertexBuffer *)vertexBuffer
 {
     
 }
