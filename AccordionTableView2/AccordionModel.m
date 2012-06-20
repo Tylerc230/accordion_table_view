@@ -10,12 +10,12 @@
 #import "Utils.h"
 #import "BB3DCell.h"
 #import "QuartzCore/CALayer.h"
+#import "Square.h"
 
-#define kNumLattices 7
 #define kVertsPerLattice 8
-#define kLatticeWidth 120.f
-#define kLatticeHeight 90.f
-#define kLatticeLength 46.f
+#define kLatticeWidth (1024.f * .5f)
+#define kLatticeHeight (764.f * .5f)
+#define kLatticeLength (537.f * .5f)
 
 @interface AccordionModel ()
 {

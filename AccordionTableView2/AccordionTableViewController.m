@@ -60,9 +60,11 @@
 - (void)setupModel
 {
     AccordionModel *model = [[AccordionModel alloc] init];
-    UIView * cell = [[[NSBundle mainBundle] loadNibNamed:@"ProductCell" owner:self options:nil] lastObject];
-    [model addCell:cell];
-    
+    for (int i = 0; i < 1; i++) {
+        UIView * cell = [[[NSBundle mainBundle] loadNibNamed:@"ProductCell" owner:self options:nil] lastObject];
+        [model addCell:cell];
+    }
+
     self.scene = model;
     [model generateBuffers];
 }

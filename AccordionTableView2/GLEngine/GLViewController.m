@@ -1,4 +1,3 @@
-//
 //  GLViewController.m
 //  AccordionTableView2
 //
@@ -9,7 +8,8 @@
 #import "GLViewController.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
 #define kConstantAttenuaion 1.03f
-#define kCameraZ -150.f
+//#define kCameraZ -150.f
+#define kCameraZ -602.76
 //#define kCameraZ -400.f
 
 
@@ -38,9 +38,9 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)viewDidLayoutSubviews
 {
-    [super viewDidLoad];
+    [super viewDidLayoutSubviews];
     [self setupGL];
     [self setupModel];
     [self setupBuffers];
@@ -108,8 +108,8 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClearColor(1.f, 1.f, 1.f, 1.0);
-    //    glClearColor(.5f, .5f, .5f, 1.0);
+//    glClearColor(1.f, 1.f, 1.f, 1.0);
+    glClearColor(.5f, .5f, .5f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     //    _rotation += 15.f * self.timeSinceLastUpdate;
@@ -134,6 +134,7 @@
     if (object.texture != nil) {
         _baseEffect.texture2d0.enabled = YES;
         _baseEffect.texture2d0.name = object.texture.name;
+        _baseEffect.texture2d0.envMode = GLKTextureEnvModeModulate;
     } else {
         _baseEffect.texture2d0.enabled = NO;
     }
@@ -154,11 +155,11 @@
 - (GLKMatrix4)projectionMatrix
 {
     float aspect = fabsf(self.view.bounds.size.width/self.view.bounds.size.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 1000.f);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.f), aspect, 1.0f, 10000.f);
     return projectionMatrix;
-    //    float hWidth = self.view.bounds.size.width/2;
-    //    float hHeight =self.view.bounds.size.height/2;
-    //    return GLKMatrix4MakeOrtho(-hWidth, hWidth, -hHeight, hHeight, 1.0, 1000.f);
+//    float hWidth = self.view.bounds.size.width/2;
+//    float hHeight =self.view.bounds.size.height/2;
+//    return GLKMatrix4MakeOrtho(-hWidth, hWidth, -hHeight, hHeight, 1.0, 1000.f);
 }
 
 - (GLKVector3)worldPointFromScreenPoint:(GLKVector2)screenPoint
@@ -185,6 +186,9 @@
     _baseEffect.light0.diffuseColor = kWhiteColor;
     _baseEffect.light0.ambientColor = kWhiteColor;
     _baseEffect.light0.constantAttenuation = kConstantAttenuaion;
+    
+//    _baseEffect.material.ambientColor = kWhiteColor;
+    _baseEffect.material.shininess = 5.f;
     
     _matrixStack = GLKMatrixStackCreate(NULL);
     GLKMatrixStackTranslate(_matrixStack, 0.f, 0.f, kCameraZ);
