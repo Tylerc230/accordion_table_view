@@ -21,9 +21,10 @@
 - (void)createProductView:(UIImage *)productThumbnail atLocation:(GLKVector3)offset
 {
     SegmentedRect * productView = [[SegmentedRect alloc] init];
-    productView.size = GLKVector3Make(productThumbnail.size.width, productThumbnail.size.height, 1.f);    
-    productView.latticeLength = productThumbnail.size.height/2 + 1.f;;
+    productView.size = GLKVector3Make(productThumbnail.size.width, productThumbnail.size.height, 0.f);
     productView.originalPosition = offset;
+    productView.compressedScale = .25;
+    productView.uncompressedScale = 1.f;
     [productView loadTextureFromImage:productThumbnail];
     [self addSubObject:productView];
 }

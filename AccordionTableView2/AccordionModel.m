@@ -50,7 +50,7 @@
     
     UIImage *cellImage = [self imageForView:cell];
     BB3DCell *lattice = [[BB3DCell alloc] init];
-    lattice.uncompressedScale = .75f;
+    lattice.uncompressedScale = .9f;
     lattice.compressedScale = .25f;
     lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
     lattice.originalPosition = GLKVector3Make(0.f, yBeginOffset, 0.f);

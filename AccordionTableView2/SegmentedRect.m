@@ -30,7 +30,7 @@ const VertexBufferIndex rectIndicies[] = {
     4,6,7
 };
 
-float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY);
+float calcCompressedHeight(float trueY, float latticeHeight, float compressionPointY);
 
 @interface SegmentedRect ()
 {
@@ -82,13 +82,6 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     return position;
 }
 
-//- (void)setLatticeLength:(float)aLatticeLength
-//{
-//    latticeLength = aLatticeLength;
-//    float z = sqrtf(pow(latticeLength, 2) - pow(self.size.y/2, 2));
-//    self.size = GLKVector3Make(self.size.x, self.size.y, z);
-//}
-
 - (GLKVector3)truePosition
 {
     return GLKVector3Add(self.offset, self.originalPosition);    
@@ -114,7 +107,8 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 - (void)updateFoldingRect:(FoldingRect *)foldingRect
 {
-    float compressionCoeff = 0.f;
+    float compressedH = (self.size.y/2) * self.uncompressedScale;
+    float compressionCoeff = 1.f - calcCompressedHeight([self truePosition].y, compressedH, compressedH);
     float currentCompressionAmount = self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
     
     GLKVector3 size = self.size;
@@ -172,18 +166,6 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     
 }
 
-- (void)setOffset:(GLKVector3)anOffset
-{
-    offset = anOffset;
-    [self updateScaleCoeff];
-}
-
-- (void)setOriginalPosition:(GLKVector3)anOriginalPosition
-{
-    originalPosition = anOriginalPosition;
-    [self updateScaleCoeff];
-}
-
 - (void)loadTexture:(NSString *)fileName
 {
     GLKTextureInfo *texture = nil;
@@ -206,14 +188,6 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     self.texture = texture;
 }
 
-- (void)updateScaleCoeff
-{
-    GLKVector3 size = self.size;
-    float yCompressionPoint = size.y * kCompressionYCoff;
-    GLKVector3 truePosition = [self truePosition];
-    _yScaleCoff = calcCompressedHeight(truePosition.y, size.y, .001f, yCompressionPoint);
-}
-
 @end
 
 /* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
@@ -224,16 +198,10 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
  * @param latticeCompressedHeight the height of a lattice after it has been compressed
  * @param compressionPointY the offset from 0 in the positive or negative direction at which the lattice begins to compress
  */
-float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY)
+float calcCompressedHeight(float trueY, float latticeHeight, float compressionPointY)
 {
-    float yScale = 0.f;
-    float yBottom = fabsf(trueY) - latticeHeight/2;
-    float delta = compressionPointY - yBottom;
-    if (delta > 0.f) {
-        float variableCompressionRatio = 1.f - compressionRatio;
-        yScale = compressionRatio + (delta/compressionPointY) * variableCompressionRatio;
-    } else {
-        yScale = compressionRatio;
-    }
-    return yScale;
+    float yTop = fabsf(trueY) + latticeHeight;
+    float delta = yTop - compressionPointY;
+    float compressionScale = delta/latticeHeight;
+    return CLAMP(compressionScale, 0.f, 1.f);
 }

@@ -32,7 +32,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-//        _rotation = 70.f;
+//        _rotation = 90.f;
     }
     return self;
 }
@@ -95,6 +95,8 @@
 {
 //    _rotation += 45.f * self.timeSinceLastUpdate;
     [self.scene updateWorld];
+    glBufferData(GL_ARRAY_BUFFER, self.scene.vertexBufferSize, self.scene.vertexData, GL_STATIC_DRAW);
+    
     float stride = sizeof(Vertex);
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid *)offsetof(Vertex, position));
@@ -108,8 +110,7 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-//    glClearColor(1.f, 1.f, 1.f, 1.0);
-    glClearColor(.5f, .5f, .5f, 1.0);
+    glClearColor(1.f, 1.f, 1.f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     //    _rotation += 15.f * self.timeSinceLastUpdate;
