@@ -13,9 +13,9 @@
 #import "Square.h"
 
 #define kVertsPerLattice 8
-#define kLatticeWidth (1024.f * .5f)
-#define kLatticeHeight (764.f * .5f)
-#define kLatticeLength (537.f * .5f)
+#define kLatticeWidth (1024.f)
+#define kLatticeHeight (764.f)
+#define kLatticeLength (537.f)
 
 @interface AccordionModel ()
 {
