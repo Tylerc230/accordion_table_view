@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSMutableArray *subObjects;
 
 - (void)generateVertices:(NSMutableData *)vertexBuffer;
+- (void)updateVerticies:(NSMutableData *)vertexBuffer;
 - (unsigned int)indexCount;
 - (unsigned int)indexByteSize;
 - (VertexBufferIndex *)indexData;

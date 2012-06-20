@@ -51,23 +51,23 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     return self;
 }
 
-- (GLKVector3)scale
-{
-    GLKVector3 scaledSize = super.scale;
-    scaledSize.y *= _yScaleCoff;
-    
-    float halfH = (self.size.y * scaledSize.y)/2;
-    float scaledDepth = sqrtf(powf(self.latticeLength * 2, 2) - pow(halfH, 2));
-    if (self.size.z > 0.f) {
-        scaledSize.z = scaledDepth/self.size.z;
-    } else {
-        scaledSize.z = 0.f;
-    }
-
-    
-    return scaledSize;
-}
-
+//- (GLKVector3)scale
+//{
+//    GLKVector3 scaledSize = super.scale;
+//    scaledSize.y *= _yScaleCoff;
+//    
+//    float halfH = (self.size.y * scaledSize.y)/2;
+//    float scaledDepth = sqrtf(powf(self.latticeLength * 2, 2) - pow(halfH, 2));
+//    if (self.size.z > 0.f) {
+//        scaledSize.z = scaledDepth/self.size.z;
+//    } else {
+//        scaledSize.z = 0.f;
+//    }
+//
+//    
+//    return scaledSize;
+//}
+//
 - (GLKVector3)position
 {
 
@@ -144,6 +144,11 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
         [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
     }
 
+}
+
+- (void)updateVerticies:(NSMutableData *)vertexBuffer
+{
+    
 }
 
 - (void)setOffset:(GLKVector3)anOffset

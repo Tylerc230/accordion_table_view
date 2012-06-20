@@ -37,6 +37,13 @@
     }
 }
 
+- (void)updateVerticies:(NSMutableData *)vertexBuffer
+{
+    for (WorldObject *subObject in self.subObjects) {
+        [subObject updateVerticies:vertexBuffer];
+    }
+}
+
 - (unsigned int)indexCount
 {
     return self.indicies.length/sizeof(VertexBufferIndex); 
