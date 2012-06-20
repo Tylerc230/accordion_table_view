@@ -11,7 +11,7 @@
 #import "WorldScene.h"
 #import "WorldObject.h"
 #define kWhiteColor GLKVector4Make(1.f, 1.f, 1.f, 1.f)
-#define kConstantAttenuaion 1.1f
+#define kConstantAttenuaion 1.03f
 #define kCameraZ -150.f
 //#define kCameraZ -400.f
 @interface AccordionTableViewController ()
@@ -134,8 +134,8 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-//    glClearColor(1.f, 1.f, 1.f, 1.0);
-    glClearColor(.5f, .5f, .5f, 1.0);
+    glClearColor(1.f, 1.f, 1.f, 1.0);
+//    glClearColor(.5f, .5f, .5f, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
 //    _rotation += 15.f * self.timeSinceLastUpdate;

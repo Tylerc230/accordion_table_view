@@ -175,7 +175,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     GLKVector3 size = self.size;
     float yCompressionPoint = size.y * kCompressionYCoff;
     GLKVector3 truePosition = [self truePosition];
-    _yScaleCoff = calcCompressedHeight(truePosition.y, size.y, .0f, yCompressionPoint);
+    _yScaleCoff = calcCompressedHeight(truePosition.y, size.y, .001f, yCompressionPoint);
 }
 
 @end

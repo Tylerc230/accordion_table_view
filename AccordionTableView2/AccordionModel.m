@@ -13,8 +13,8 @@
 #define kNumLattices 7
 #define kVertsPerLattice 8
 #define kLatticeWidth 120.f
-#define kLatticeHeight 100.f
-#define kLatticeLength 60.f
+#define kLatticeHeight 90.f
+#define kLatticeLength 46.f
 
 @interface AccordionModel ()
 @property (nonatomic, strong) NSMutableArray *textures;
