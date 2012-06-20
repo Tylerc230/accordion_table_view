@@ -38,7 +38,7 @@
 {
     self = [super initWithNibName:@"AccordionTableViewController" bundle:nil];
     if (self) {
-        _rotation = 90.f;
+//        _rotation = 70.f;
     }
     return self;
 }

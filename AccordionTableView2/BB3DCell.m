@@ -23,6 +23,7 @@
 {
     SegmentedRect * productView = [[SegmentedRect alloc] init];
     productView.size = GLKVector3Make(40.f, 20.f, 1.f);
+    productView.latticeLength = 10.05f;
     productView.originalPosition = GLKVector3Make(30.f, 0.f, 0.f);
     [productView loadTexture:@"tile_sonyTV"];
     [self addSubObject:productView];

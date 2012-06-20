@@ -40,6 +40,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 @implementation SegmentedRect
 @synthesize originalPosition;
+@synthesize latticeLength;
 @synthesize offset;
 
 - (id)init
@@ -54,6 +55,16 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 {
     GLKVector3 scaledSize = super.scale;
     scaledSize.y *= _yScaleCoff;
+    
+    float halfH = (self.size.y * scaledSize.y)/2;
+    float scaledDepth = sqrtf(powf(self.latticeLength * 2, 2) - pow(halfH, 2));
+    if (self.size.z > 0.f) {
+        scaledSize.z = scaledDepth/self.size.z;
+    } else {
+        scaledSize.z = 0.f;
+    }
+
+    
     return scaledSize;
 }
 
@@ -68,6 +79,13 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 //        position = GLKVector3Make(position.x, sign * (yCompressionPoint + scaledY), position.z);
 //    }
     return position;
+}
+
+- (void)setLatticeLength:(float)aLatticeLength
+{
+    latticeLength = aLatticeLength;
+    float z = sqrtf(pow(latticeLength, 2) - pow(self.size.y/2, 2));
+    self.size = GLKVector3Make(self.size.x, self.size.y, z);
 }
 
 - (GLKVector3)truePosition

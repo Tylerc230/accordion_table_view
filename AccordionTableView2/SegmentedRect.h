@@ -11,5 +11,6 @@
 @interface SegmentedRect : WorldObject
 @property (nonatomic, assign) GLKVector3 originalPosition;
 @property (nonatomic, assign) GLKVector3 offset;
+@property (nonatomic, assign) float latticeLength;
 - (void)loadTexture:(NSString *)fileName;
 @end
