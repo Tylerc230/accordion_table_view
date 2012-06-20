@@ -40,7 +40,6 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 @implementation SegmentedRect
 @synthesize originalPosition;
-@synthesize latticeLength;
 @synthesize offset;
 @synthesize compressedScale;
 @synthesize uncompressedScale;
@@ -83,12 +82,12 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     return position;
 }
 
-- (void)setLatticeLength:(float)aLatticeLength
-{
-    latticeLength = aLatticeLength;
-    float z = sqrtf(pow(latticeLength, 2) - pow(self.size.y/2, 2));
-    self.size = GLKVector3Make(self.size.x, self.size.y, z);
-}
+//- (void)setLatticeLength:(float)aLatticeLength
+//{
+//    latticeLength = aLatticeLength;
+//    float z = sqrtf(pow(latticeLength, 2) - pow(self.size.y/2, 2));
+//    self.size = GLKVector3Make(self.size.x, self.size.y, z);
+//}
 
 - (GLKVector3)truePosition
 {
@@ -100,15 +99,38 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     [super generateVertices:vertexBuffer];
     [vertexBuffer objectCreationBegin];
     int currentVertexCount = vertexBuffer.vertexCount;
+    FoldingRect newRect;
+    [self updateFoldingRect:&newRect];
+    int numIndices = sizeof(rectIndicies)/sizeof(*rectIndicies);
+    [vertexBuffer addVerticies:(Vertex*)&newRect count:sizeof(FoldingRect)/sizeof(Vertex)];
+    
+    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(VertexBufferIndex)];
+    for (int i = 0; i < numIndices; i++) {
+        VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
+        [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
+    }
+    [vertexBuffer objectCreationEnd];
+}
+
+- (void)updateFoldingRect:(FoldingRect *)foldingRect
+{
+    float compressionCoeff = 0.f;
+    float currentCompressionAmount = self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
+    
     GLKVector3 size = self.size;
     //front face of lattice is at 0 depth
     float leftSide = -.5f * size.x;
     float rightSide = .5f * size.x;
-    float topY = .5f * size.y;
+    float topY = .5f * size.y * currentCompressionAmount;
     float middleY = 0.f;
-    float bottomY = -.5f * size.y;
+    float bottomY = -.5f * size.y * currentCompressionAmount;
+    
+    float compressedHHeight = (topY - bottomY)/2;
+    float uncompressedHHeight = size.y/2;
+    float depth = sqrtf(powf(uncompressedHHeight, 2) - powf(compressedHHeight, 2));
+    
     float front = 0.f;
-    float back = -1.f * size.z;
+    float back = -depth;
     GLKVector3 topLeftVector = GLKVector3Make(leftSide, topY, front);
     GLKVector3 topRightVector = GLKVector3Make(rightSide, topY, front);
     GLKVector3 middleLeftVector = GLKVector3Make(leftSide, middleY, back);
@@ -127,33 +149,25 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     GLKVector2 bottomLeftTextCoord = GLKVector2Make(0.0f, 0.f);
     GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 0.f);
     
-    FoldingRect newRect;
-    newRect.topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
-    newRect.topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
-    newRect.bottomLeft1 = createVert(middleLeftVector, topNormal, middleLeftTextCoord);
-    newRect.bottomRight1 = createVert(middleRightVector, topNormal, middleRightTextCoord);
+
+    foldingRect->topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
+    foldingRect->topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
+    foldingRect->bottomLeft1 = createVert(middleLeftVector, topNormal, middleLeftTextCoord);
+    foldingRect->bottomRight1 = createVert(middleRightVector, topNormal, middleRightTextCoord);
     
-    newRect.topLeft2 = createVert(middleLeftVector, bottomNormal, middleLeftTextCoord);
-    newRect.topRight2 = createVert(middleRightVector, bottomNormal, middleRightTextCoord);
-    newRect.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
-    newRect.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
+    foldingRect->topLeft2 = createVert(middleLeftVector, bottomNormal, middleLeftTextCoord);
+    foldingRect->topRight2 = createVert(middleRightVector, bottomNormal, middleRightTextCoord);
+    foldingRect->bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
+    foldingRect->bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
     
-    int numIndices = sizeof(rectIndicies)/sizeof(*rectIndicies);
-    [vertexBuffer addVerticies:(Vertex*)&newRect count:sizeof(FoldingRect)/sizeof(Vertex)];
     
-    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(VertexBufferIndex)];
-    for (int i = 0; i < numIndices; i++) {
-        VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
-        [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
-    }
-    [vertexBuffer objectCreationEnd];
 }
 
 - (void)updateVerticies:(VertexBuffer *)vertexBuffer
 {
     [vertexBuffer objectUpdateBegin];
     FoldingRect *objectVertices = (FoldingRect *)[vertexBuffer vertexDataForCurrentObject];
-    
+    [self updateFoldingRect:objectVertices];
     [vertexBuffer objectUpdateEnd];
     
 }
