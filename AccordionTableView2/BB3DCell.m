@@ -22,8 +22,8 @@
 - (void)createSubObjects
 {
     SegmentedRect * productView = [[SegmentedRect alloc] init];
-    productView.scale = GLKVector3Make(1.f, 1.f, 1.f);
-    productView.originalPosition = GLKVector3Make(0.f, 0.f, 0.f);
+    productView.size = GLKVector3Make(40.f, 20.f, 1.f);
+    productView.originalPosition = GLKVector3Make(30.f, 0.f, 0.f);
     [productView loadTexture:@"tile_sonyTV"];
     [self addSubObject:productView];
 }

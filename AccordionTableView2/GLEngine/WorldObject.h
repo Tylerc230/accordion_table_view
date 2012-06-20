@@ -11,6 +11,7 @@
 #import "Utils.h"
 @interface WorldObject : NSObject
 @property (nonatomic, assign) GLKVector3 position;
+@property (nonatomic, assign) GLKVector3 size;
 @property (nonatomic, assign) GLKVector3 scale;
 @property (nonatomic, strong) GLKTextureInfo *texture;
 @property (nonatomic, strong) NSMutableData *indicies;

@@ -14,6 +14,7 @@
 
 @implementation WorldObject
 @synthesize position;
+@synthesize size;
 @synthesize scale;
 @synthesize texture;
 @synthesize subObjects;
@@ -24,6 +25,7 @@
     self = [super init];
     if (self) {
         self.subObjects = [NSMutableArray arrayWithCapacity:5];
+        self.scale = GLKVector3Make(1.f, 1.f, 1.f);
     }
     return self;
 }

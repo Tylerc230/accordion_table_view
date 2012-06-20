@@ -66,7 +66,7 @@
 {
     for (int i = 0; i < numLattices; i++) {
         BB3DCell *lattice = [[BB3DCell alloc] init];
-        lattice.scale = GLKVector3Make(kLatticeWidth, kLatticeHeight, 50.f);
+        lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 50.f);
         lattice.originalPosition = GLKVector3Make(0.f, i * kLatticeHeight, 0.f);
         [self.scene addWorldObject:lattice];
 

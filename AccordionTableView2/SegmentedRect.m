@@ -52,9 +52,9 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 - (GLKVector3)scale
 {
-    GLKVector3 scaledScale = [super scale];
-    scaledScale.y *= _yScaleCoff;
-    return scaledScale;
+    GLKVector3 scaledSize = super.scale;
+    scaledSize.y *= _yScaleCoff;
+    return scaledSize;
 }
 
 - (GLKVector3)position
@@ -79,14 +79,15 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 {
     [super generateVertices:vertexBuffer];
     int currentVertexCount = vertexBuffer.length/sizeof(Vertex);
+    GLKVector3 size = self.size;
     //front face of lattice is at 0 depth
-    float leftSide = -.5f;
-    float rightSide = .5f;
-    float topY = .5f;
+    float leftSide = -.5f * size.x;
+    float rightSide = .5f * size.x;
+    float topY = .5f * size.y;
     float middleY = 0.f;
-    float bottomY = -.5f;
+    float bottomY = -.5f * size.y;
     float front = 0.f;
-    float back = -1.f;
+    float back = -1.f * size.z;
     GLKVector3 topLeftVector = GLKVector3Make(leftSide, topY, front);
     GLKVector3 topRightVector = GLKVector3Make(rightSide, topY, front);
     GLKVector3 middleLeftVector = GLKVector3Make(leftSide, middleY, back);
@@ -153,10 +154,10 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
 
 - (void)updateScaleCoeff
 {
-    GLKVector3 scale = [super scale];
-    float yCompressionPoint = scale.y * kCompressionYCoff;
+    GLKVector3 size = self.size;
+    float yCompressionPoint = size.y * kCompressionYCoff;
     GLKVector3 truePosition = [self truePosition];
-    _yScaleCoff = calcCompressedHeight(truePosition.y, scale.y, .0f, yCompressionPoint);
+    _yScaleCoff = calcCompressedHeight(truePosition.y, size.y, .0f, yCompressionPoint);
 }
 
 @end
