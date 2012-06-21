@@ -57,8 +57,8 @@
 float calcCompressionCoeff(float trueY, float compressedScale, float uncompressedScale, float uncompressedHeight)
 {
     float compressedBoundry = uncompressedHeight;
-    float compressionScale = 1.f - fabsf(trueY)/compressedBoundry;
-    return CLAMP(compressionScale, 0.f, 1.f);
+    float compressionScale = trueY/compressedBoundry;
+    return CLAMP(compressionScale, -1.f, 1.f);
 }
 
 

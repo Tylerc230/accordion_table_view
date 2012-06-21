@@ -58,11 +58,10 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
     GLKVector3 position = [self truePosition];
     float realSpacing = self.size.y;
     float avgInterpolation = (self.uncompressedScale - self.compressedScale)/2;
-    float sign = position.y == 0.f ? 1 : (position.y/fabs(position.y));
     float yOffset = position.y * self.compressedScale;
 
-    float cca = 1 - self.yScaleCoeff;
-    yOffset += sign * realSpacing * avgInterpolation * cca;
+    float cca = self.yScaleCoeff;
+    yOffset += realSpacing * avgInterpolation * cca;
     position = GLKVector3Make(position.x, yOffset, position.z);
     return position;
 }
@@ -142,7 +141,7 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
 
 - (float)currentCompressionAmount
 {
-    float compressionCoeff = self.yScaleCoeff;
+    float compressionCoeff = 1 - fabsf(self.yScaleCoeff);
     return self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
 }
 
