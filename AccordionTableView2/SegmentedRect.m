@@ -63,7 +63,6 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
 
     float cca = 1 - self.yScaleCoeff;
     yOffset += sign * realSpacing * avgInterpolation * cca;
-//    yOffset += position.y * avgInterpolation;
     position = GLKVector3Make(position.x, yOffset, position.z);
     return position;
 }

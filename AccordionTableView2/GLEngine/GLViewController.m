@@ -32,7 +32,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _rotation = 75;
+//        _rotation = 75;
     }
     return self;
 }
@@ -191,7 +191,7 @@
 //    _baseEffect.material.ambientColor = kWhiteColor;
     _baseEffect.material.shininess = 5.f;
     
-    float cameraZ = -1000;//-(self.view.bounds.size.height/2)/tan(kCameraAngle/2);
+    float cameraZ = -(self.view.bounds.size.height/2)/tan(kCameraAngle/2);
     _matrixStack = GLKMatrixStackCreate(NULL);
     GLKMatrixStackTranslate(_matrixStack, 0.f, 0.f, cameraZ);
     GLKMatrixStackPush(_matrixStack);
