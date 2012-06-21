@@ -30,18 +30,19 @@ const VertexBufferIndex rectIndicies[] = {
     4,6,7
 };
 
-float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY);
+float calcCompressionCoeff(float trueY, float compressedScale, float uncompressedScale, float uncompressedHeight);
 
 @interface SegmentedRect ()
-{
-    float _yScaleCoff;
-}
+@property (nonatomic, readonly) float currentCompressionAmount;
 @end
 
 @implementation SegmentedRect
 @synthesize originalPosition;
-@synthesize latticeLength;
 @synthesize offset;
+@synthesize compressedScale;
+@synthesize uncompressedScale;
+@synthesize yScaleCoeff;
+@synthesize currentCompressionAmount;
 
 - (id)init
 {
@@ -51,41 +52,18 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     return self;
 }
 
-//- (GLKVector3)scale
-//{
-//    GLKVector3 scaledSize = super.scale;
-//    scaledSize.y *= _yScaleCoff;
-//    
-//    float halfH = (self.size.y * scaledSize.y)/2;
-//    float scaledDepth = sqrtf(powf(self.latticeLength * 2, 2) - pow(halfH, 2));
-//    if (self.size.z > 0.f) {
-//        scaledSize.z = scaledDepth/self.size.z;
-//    } else {
-//        scaledSize.z = 0.f;
-//    }
-//
-//    
-//    return scaledSize;
-//}
-//
 - (GLKVector3)position
 {
 
     GLKVector3 position = [self truePosition];
-//    float yCompressionPoint = super.scale.y * kCompressionYCoff;
-//    if (fabsf(position.y) > yCompressionPoint) {
-//        float sign = position.y != 0.f ? position.y/fabs(position.y) : 1.f;
-//        float scaledY = (fabs(position.y) - yCompressionPoint) * _yScaleCoff;
-//        position = GLKVector3Make(position.x, sign * (yCompressionPoint + scaledY), position.z);
-//    }
-    return position;
-}
+    float realSpacing = self.size.y;
+    float avgInterpolation = (self.uncompressedScale - self.compressedScale)/2;
+    float yOffset = position.y * self.compressedScale;
 
-- (void)setLatticeLength:(float)aLatticeLength
-{
-    latticeLength = aLatticeLength;
-    float z = sqrtf(pow(latticeLength, 2) - pow(self.size.y/2, 2));
-    self.size = GLKVector3Make(self.size.x, self.size.y, z);
+    float cca = self.yScaleCoeff;
+    yOffset += realSpacing * avgInterpolation * cca;
+    position = GLKVector3Make(position.x, yOffset, position.z);
+    return position;
 }
 
 - (GLKVector3)truePosition
@@ -93,19 +71,42 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     return GLKVector3Add(self.offset, self.originalPosition);    
 }
 
-- (void)generateVertices:(NSMutableData *)vertexBuffer
+- (void)generateVertices:(VertexBuffer *)vertexBuffer
 {
     [super generateVertices:vertexBuffer];
-    int currentVertexCount = vertexBuffer.length/sizeof(Vertex);
+    [vertexBuffer objectCreationBegin];
+    int currentVertexCount = vertexBuffer.vertexCount;
+    FoldingRect newRect;
+    [self updateFoldingRect:&newRect];
+    int numIndices = sizeof(rectIndicies)/sizeof(*rectIndicies);
+    [vertexBuffer addVerticies:(Vertex*)&newRect count:sizeof(FoldingRect)/sizeof(Vertex)];
+    
+    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(VertexBufferIndex)];
+    for (int i = 0; i < numIndices; i++) {
+        VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
+        [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
+    }
+    [vertexBuffer objectCreationEnd];
+}
+
+- (void)updateFoldingRect:(FoldingRect *)foldingRect
+{
+    float compressionScale = self.currentCompressionAmount;
+    
     GLKVector3 size = self.size;
     //front face of lattice is at 0 depth
     float leftSide = -.5f * size.x;
     float rightSide = .5f * size.x;
-    float topY = .5f * size.y;
+    float topY = .5f * size.y * compressionScale;
     float middleY = 0.f;
-    float bottomY = -.5f * size.y;
+    float bottomY = -.5f * size.y * compressionScale;
+    
+    float compressedHHeight = (topY - bottomY)/2;
+    float uncompressedHHeight = size.y/2;
+    float depth = sqrtf(powf(uncompressedHHeight, 2) - powf(compressedHHeight, 2));
+    
     float front = 0.f;
-    float back = -1.f * size.z;
+    float back = -depth;
     GLKVector3 topLeftVector = GLKVector3Make(leftSide, topY, front);
     GLKVector3 topRightVector = GLKVector3Make(rightSide, topY, front);
     GLKVector3 middleLeftVector = GLKVector3Make(leftSide, middleY, back);
@@ -124,43 +125,34 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     GLKVector2 bottomLeftTextCoord = GLKVector2Make(0.0f, 0.f);
     GLKVector2 bottomRightTextCoord = GLKVector2Make(1.f, 0.f);
     
-    FoldingRect newRect;
-    newRect.topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
-    newRect.topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
-    newRect.bottomLeft1 = createVert(middleLeftVector, topNormal, middleLeftTextCoord);
-    newRect.bottomRight1 = createVert(middleRightVector, topNormal, middleRightTextCoord);
-    
-    newRect.topLeft2 = createVert(middleLeftVector, bottomNormal, middleLeftTextCoord);
-    newRect.topRight2 = createVert(middleRightVector, bottomNormal, middleRightTextCoord);
-    newRect.bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
-    newRect.bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
-    
-    int numIndices = sizeof(rectIndicies)/sizeof(*rectIndicies);
-    [vertexBuffer appendBytes:&newRect length:sizeof(FoldingRect)];
-    
-    self.indicies = [NSMutableData dataWithCapacity:numIndices * sizeof(GLushort)];
-    for (int i = 0; i < numIndices; i++) {
-        VertexBufferIndex index = rectIndicies[i] + currentVertexCount;
-        [self.indicies appendBytes:&index length:sizeof(VertexBufferIndex)];
-    }
 
-}
-
-- (void)updateVerticies:(NSMutableData *)vertexBuffer
-{
+    foldingRect->topLeft1 = createVert(topLeftVector, topNormal, topLeftTextCoord);
+    foldingRect->topRight1 = createVert(topRightVector, topNormal, topRightTextCoord);
+    foldingRect->bottomLeft1 = createVert(middleLeftVector, topNormal, middleLeftTextCoord);
+    foldingRect->bottomRight1 = createVert(middleRightVector, topNormal, middleRightTextCoord);
+    
+    foldingRect->topLeft2 = createVert(middleLeftVector, bottomNormal, middleLeftTextCoord);
+    foldingRect->topRight2 = createVert(middleRightVector, bottomNormal, middleRightTextCoord);
+    foldingRect->bottomLeft2 = createVert(bottomLeftVector, bottomNormal, bottomLeftTextCoord);
+    foldingRect->bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
+    
     
 }
 
-- (void)setOffset:(GLKVector3)anOffset
+- (float)currentCompressionAmount
 {
-    offset = anOffset;
-    [self updateScaleCoeff];
+    float compressionCoeff = 1 - fabsf(self.yScaleCoeff);
+    return self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
 }
 
-- (void)setOriginalPosition:(GLKVector3)anOriginalPosition
+- (void)updateVerticies:(VertexBuffer *)vertexBuffer
 {
-    originalPosition = anOriginalPosition;
-    [self updateScaleCoeff];
+    [super updateVerticies:vertexBuffer];
+    [vertexBuffer objectUpdateBegin];
+    FoldingRect *objectVertices = (FoldingRect *)[vertexBuffer vertexDataForCurrentObject];
+    [self updateFoldingRect:objectVertices];
+    [vertexBuffer objectUpdateEnd];
+    
 }
 
 - (void)loadTexture:(NSString *)fileName
@@ -185,34 +177,5 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionRa
     self.texture = texture;
 }
 
-- (void)updateScaleCoeff
-{
-    GLKVector3 size = self.size;
-    float yCompressionPoint = size.y * kCompressionYCoff;
-    GLKVector3 truePosition = [self truePosition];
-    _yScaleCoff = calcCompressedHeight(truePosition.y, size.y, .001f, yCompressionPoint);
-}
-
 @end
 
-/* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
- * When we hit a certain y threshold in the positive or negative direction, we want the accordion to start folding
- * to its folded (compressed) height.
- * @param trueY the y offset before any folding occurs
- * @param latticeHeight the unfolded height
- * @param latticeCompressedHeight the height of a lattice after it has been compressed
- * @param compressionPointY the offset from 0 in the positive or negative direction at which the lattice begins to compress
- */
-float calcCompressedHeight(float trueY, float latticeHeight, float compressionRatio, float compressionPointY)
-{
-    float yScale = 0.f;
-    float yBottom = fabsf(trueY) - latticeHeight/2;
-    float delta = compressionPointY - yBottom;
-    if (delta > 0.f) {
-        float variableCompressionRatio = 1.f - compressionRatio;
-        yScale = compressionRatio + (delta/compressionPointY) * variableCompressionRatio;
-    } else {
-        yScale = compressionRatio;
-    }
-    return yScale;
-}

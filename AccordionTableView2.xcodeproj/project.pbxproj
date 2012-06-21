@@ -31,6 +31,8 @@
 		703E5185158A9B8B0092B497 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 703E5184158A9B8B0092B497 /* OpenGLES.framework */; };
 		707BA5BD15923EE400BBE414 /* Square.m in Sources */ = {isa = PBXBuildFile; fileRef = 707BA5BC15923EE400BBE414 /* Square.m */; };
 		707BA5BE15923EE400BBE414 /* Square.m in Sources */ = {isa = PBXBuildFile; fileRef = 707BA5BC15923EE400BBE414 /* Square.m */; };
+		707BA5C21592716A00BBE414 /* VertexBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 707BA5C11592716A00BBE414 /* VertexBuffer.m */; };
+		707BA5C31592716A00BBE414 /* VertexBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 707BA5C11592716A00BBE414 /* VertexBuffer.m */; };
 		707CDA301590E21E001B78A4 /* WorldScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA2F1590E21E001B78A4 /* WorldScene.m */; };
 		707CDA311590E21E001B78A4 /* WorldScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA2F1590E21E001B78A4 /* WorldScene.m */; };
 		707CDA441590E2F2001B78A4 /* WorldObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 707CDA431590E2F2001B78A4 /* WorldObject.m */; };
@@ -91,6 +93,8 @@
 		703E5184158A9B8B0092B497 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		707BA5BB15923EE300BBE414 /* Square.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Square.h; sourceTree = "<group>"; };
 		707BA5BC15923EE400BBE414 /* Square.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Square.m; sourceTree = "<group>"; };
+		707BA5C01592716A00BBE414 /* VertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexBuffer.h; sourceTree = "<group>"; };
+		707BA5C11592716A00BBE414 /* VertexBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VertexBuffer.m; sourceTree = "<group>"; };
 		707CDA2E1590E21E001B78A4 /* WorldScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldScene.h; path = GLEngine/WorldScene.h; sourceTree = "<group>"; };
 		707CDA2F1590E21E001B78A4 /* WorldScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorldScene.m; path = GLEngine/WorldScene.m; sourceTree = "<group>"; };
 		707CDA421590E2F2001B78A4 /* WorldObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldObject.h; path = GLEngine/WorldObject.h; sourceTree = "<group>"; };
@@ -248,6 +252,8 @@
 				707CDA481590E383001B78A4 /* GLViewController.m */,
 				707CDA4F1590E9E2001B78A4 /* Utils.m */,
 				707CDA521590EA00001B78A4 /* Utils.h */,
+				707BA5C01592716A00BBE414 /* VertexBuffer.h */,
+				707BA5C11592716A00BBE414 /* VertexBuffer.m */,
 			);
 			name = GLEngine;
 			sourceTree = "<group>";
@@ -388,6 +394,7 @@
 				70EA9EC31591439700AF4FF2 /* BB3DCell.m in Sources */,
 				70EA9ED0159173B600AF4FF2 /* ProductCell.m in Sources */,
 				707BA5BD15923EE400BBE414 /* Square.m in Sources */,
+				707BA5C21592716A00BBE414 /* VertexBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +413,7 @@
 				70EA9EC41591439700AF4FF2 /* BB3DCell.m in Sources */,
 				70EA9ED1159173B600AF4FF2 /* ProductCell.m in Sources */,
 				707BA5BE15923EE400BBE414 /* Square.m in Sources */,
+				707BA5C31592716A00BBE414 /* VertexBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

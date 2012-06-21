@@ -30,14 +30,14 @@
     return self;
 }
 
-- (void)generateVertices:(NSMutableData *)vertexBuffer
+- (void)generateVertices:(VertexBuffer *)vertexBuffer
 {
     for (WorldObject *subObject in self.subObjects) {
         [subObject generateVertices:vertexBuffer];
     }
 }
 
-- (void)updateVerticies:(NSMutableData *)vertexBuffer
+- (void)updateVerticies:(VertexBuffer *)vertexBuffer
 {
     for (WorldObject *subObject in self.subObjects) {
         [subObject updateVerticies:vertexBuffer];
