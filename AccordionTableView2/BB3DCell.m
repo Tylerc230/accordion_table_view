@@ -7,9 +7,11 @@
 //
 
 #import "BB3DCell.h"
-
+@interface BB3DCell ()
+@property (nonatomic, strong) SegmentedRect *productView;
+@end
 @implementation BB3DCell
-
+@synthesize productView;
 - (id)init
 {
     self = [super init];
@@ -18,15 +20,46 @@
     return self;
 }
 
+- (void)setOffset:(GLKVector3)anOffset
+{
+    [super setOffset:anOffset];
+    [self updateScaleCoeff];
+}
+
+- (void)setOriginalPosition:(GLKVector3)originalPosition
+{
+    [super setOriginalPosition:originalPosition];
+    [self updateScaleCoeff];
+}
+
+- (void)updateScaleCoeff
+{
+    self.yScaleCoeff = calcCompressionCoeff(self.position.y, self.compressedScale, self.uncompressedScale, self.size.y);
+    self.productView.yScaleCoeff = self.yScaleCoeff;    
+}
+
 - (void)createProductView:(UIImage *)productThumbnail atLocation:(GLKVector3)offset
 {
-    SegmentedRect * productView = [[SegmentedRect alloc] init];
-    productView.size = GLKVector3Make(productThumbnail.size.width, productThumbnail.size.height, 0.f);
-    productView.originalPosition = offset;
-    productView.compressedScale = .25;
-    productView.uncompressedScale = 1.f;
-    [productView loadTextureFromImage:productThumbnail];
-    [self addSubObject:productView];
+    self.productView = [[SegmentedRect alloc] init];
+    self.productView.size = GLKVector3Make(productThumbnail.size.width, productThumbnail.size.height, 0.f);
+    self.productView.originalPosition = offset;
+    self.productView.compressedScale = .25;
+    self.productView.uncompressedScale = 1.f;
+    [self.productView loadTextureFromImage:productThumbnail];
+    [self addSubObject:self.productView];
+    [self updateScaleCoeff];
 }
+
+/* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
+ * When we hit a certain y threshold in the positive or negative direction, we want the accordion to start folding
+ * to its folded (compressed) height.
+ */
+float calcCompressionCoeff(float trueY, float compressedScale, float uncompressedScale, float uncompressedHeight)
+{
+    float compressedH = ((uncompressedScale - compressedScale) + (compressedScale/2)) * uncompressedHeight/2;
+    float compressionScale = 1.f - fabsf(trueY)/compressedH;
+    return CLAMP(compressionScale, 0.f, 1.f);
+}
+
 
 @end

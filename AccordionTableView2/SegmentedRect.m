@@ -30,11 +30,10 @@ const VertexBufferIndex rectIndicies[] = {
     4,6,7
 };
 
-float calcCompressedHeight(float trueY, float latticeHeight, float compressionPointY);
+float calcCompressionCoeff(float trueY, float compressedScale, float uncompressedScale, float uncompressedHeight);
 
 @interface SegmentedRect ()
 {
-    float _yScaleCoff;
 }
 @end
 
@@ -43,6 +42,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionPo
 @synthesize offset;
 @synthesize compressedScale;
 @synthesize uncompressedScale;
+@synthesize yScaleCoeff;
 
 - (id)init
 {
@@ -52,23 +52,6 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionPo
     return self;
 }
 
-//- (GLKVector3)scale
-//{
-//    GLKVector3 scaledSize = super.scale;
-//    scaledSize.y *= _yScaleCoff;
-//    
-//    float halfH = (self.size.y * scaledSize.y)/2;
-//    float scaledDepth = sqrtf(powf(self.latticeLength * 2, 2) - pow(halfH, 2));
-//    if (self.size.z > 0.f) {
-//        scaledSize.z = scaledDepth/self.size.z;
-//    } else {
-//        scaledSize.z = 0.f;
-//    }
-//
-//    
-//    return scaledSize;
-//}
-//
 - (GLKVector3)position
 {
 
@@ -107,8 +90,8 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionPo
 
 - (void)updateFoldingRect:(FoldingRect *)foldingRect
 {
-    float compressedH = (self.size.y/2) * self.uncompressedScale;
-    float compressionCoeff = 1.f - calcCompressedHeight([self truePosition].y, compressedH, compressedH);
+   
+    float compressionCoeff = self.yScaleCoeff;
     float currentCompressionAmount = self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
     
     GLKVector3 size = self.size;
@@ -159,6 +142,7 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionPo
 
 - (void)updateVerticies:(VertexBuffer *)vertexBuffer
 {
+    [super updateVerticies:vertexBuffer];
     [vertexBuffer objectUpdateBegin];
     FoldingRect *objectVertices = (FoldingRect *)[vertexBuffer vertexDataForCurrentObject];
     [self updateFoldingRect:objectVertices];
@@ -190,18 +174,3 @@ float calcCompressedHeight(float trueY, float latticeHeight, float compressionPo
 
 @end
 
-/* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
- * When we hit a certain y threshold in the positive or negative direction, we want the accordion to start folding
- * to its folded (compressed) height.
- * @param trueY the y offset before any folding occurs
- * @param latticeHeight the unfolded height
- * @param latticeCompressedHeight the height of a lattice after it has been compressed
- * @param compressionPointY the offset from 0 in the positive or negative direction at which the lattice begins to compress
- */
-float calcCompressedHeight(float trueY, float latticeHeight, float compressionPointY)
-{
-    float yTop = fabsf(trueY) + latticeHeight;
-    float delta = yTop - compressionPointY;
-    float compressionScale = delta/latticeHeight;
-    return CLAMP(compressionScale, 0.f, 1.f);
-}
