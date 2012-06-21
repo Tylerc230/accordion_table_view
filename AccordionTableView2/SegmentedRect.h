@@ -16,4 +16,5 @@
 @property (nonatomic, assign) float yScaleCoeff;
 - (void)loadTexture:(NSString *)fileName;
 - (void)loadTextureFromImage:(UIImage *)image;
+- (GLKVector3)truePosition;
 @end

@@ -59,7 +59,7 @@
 - (void)setupModel
 {
     AccordionModel *model = [[AccordionModel alloc] init];
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
         UIView * cell = [[[NSBundle mainBundle] loadNibNamed:@"ProductCell" owner:self options:nil] lastObject];
         [model addCell:cell];
     }

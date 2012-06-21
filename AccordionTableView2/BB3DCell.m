@@ -34,20 +34,20 @@
 
 - (void)updateScaleCoeff
 {
-    self.yScaleCoeff = calcCompressionCoeff(self.position.y, self.compressedScale, self.uncompressedScale, self.size.y);
+    self.yScaleCoeff = calcCompressionCoeff([self truePosition].y, self.compressedScale, self.uncompressedScale, self.size.y);
     self.productView.yScaleCoeff = self.yScaleCoeff;    
 }
 
 - (void)createProductView:(UIImage *)productThumbnail atLocation:(GLKVector3)offset
 {
-    self.productView = [[SegmentedRect alloc] init];
-    self.productView.size = GLKVector3Make(productThumbnail.size.width, productThumbnail.size.height, 0.f);
-    self.productView.originalPosition = offset;
-    self.productView.compressedScale = .25;
-    self.productView.uncompressedScale = 1.f;
-    [self.productView loadTextureFromImage:productThumbnail];
-    [self addSubObject:self.productView];
-    [self updateScaleCoeff];
+//    self.productView = [[SegmentedRect alloc] init];
+//    self.productView.size = GLKVector3Make(productThumbnail.size.width, productThumbnail.size.height, 0.f);
+//    self.productView.originalPosition = offset;
+//    self.productView.compressedScale = .25;
+//    self.productView.uncompressedScale = 1.f;
+//    [self.productView loadTextureFromImage:productThumbnail];
+//    [self addSubObject:self.productView];
+//    [self updateScaleCoeff];
 }
 
 /* Calculates where something should be drawn on the y axis based on how far it has been scrolled up or down.
@@ -56,8 +56,9 @@
  */
 float calcCompressionCoeff(float trueY, float compressedScale, float uncompressedScale, float uncompressedHeight)
 {
-    float compressedH = ((uncompressedScale - compressedScale) + (compressedScale/2)) * uncompressedHeight/2;
-    float compressionScale = 1.f - fabsf(trueY)/compressedH;
+//    float compressedH = ((uncompressedScale - compressedScale) + (compressedScale/2)) * uncompressedHeight/2;
+    float compressedBoundry = uncompressedHeight;
+    float compressionScale = 1.f - fabsf(trueY)/compressedBoundry;
     return CLAMP(compressionScale, 0.f, 1.f);
 }
 

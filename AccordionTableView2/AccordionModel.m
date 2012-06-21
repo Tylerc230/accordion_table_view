@@ -13,8 +13,10 @@
 #import "Square.h"
 
 #define kVertsPerLattice 8
-#define kLatticeWidth (1024.f)
-#define kLatticeHeight (764.f)
+#define kLatticeWidth 1024.f
+#define kLatticeHeight 764.f
+#define kMaxScaleCoeff .75f
+#define kMinScaleCoeff .25f
 
 @interface AccordionModel ()
 {
@@ -50,8 +52,8 @@
     
     UIImage *cellImage = [self imageForView:cell];
     BB3DCell *lattice = [[BB3DCell alloc] init];
-    lattice.uncompressedScale = .75f;
-    lattice.compressedScale = .25f;
+    lattice.uncompressedScale = kMaxScaleCoeff;
+    lattice.compressedScale = kMinScaleCoeff;
     lattice.size = GLKVector3Make(kLatticeWidth, kLatticeHeight, 0.f);
     lattice.originalPosition = GLKVector3Make(0.f, yBeginOffset, 0.f);
     [lattice createProductView:cellImage atLocation:GLKVector3Make(lattice.size.x/4, 0.f, 10.f)];

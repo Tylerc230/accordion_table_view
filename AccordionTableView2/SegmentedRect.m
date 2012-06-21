@@ -33,8 +33,7 @@ const VertexBufferIndex rectIndicies[] = {
 float calcCompressionCoeff(float trueY, float compressedScale, float uncompressedScale, float uncompressedHeight);
 
 @interface SegmentedRect ()
-{
-}
+@property (nonatomic, readonly) float currentCompressionAmount;
 @end
 
 @implementation SegmentedRect
@@ -43,6 +42,7 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
 @synthesize compressedScale;
 @synthesize uncompressedScale;
 @synthesize yScaleCoeff;
+@synthesize currentCompressionAmount;
 
 - (id)init
 {
@@ -56,12 +56,15 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
 {
 
     GLKVector3 position = [self truePosition];
-//    float yCompressionPoint = super.scale.y * kCompressionYCoff;
-//    if (fabsf(position.y) > yCompressionPoint) {
-//        float sign = position.y != 0.f ? position.y/fabs(position.y) : 1.f;
-//        float scaledY = (fabs(position.y) - yCompressionPoint) * _yScaleCoff;
-//        position = GLKVector3Make(position.x, sign * (yCompressionPoint + scaledY), position.z);
-//    }
+    float realSpacing = self.size.y;
+    float avgInterpolation = (self.uncompressedScale - self.compressedScale)/2;
+    float sign = position.y == 0.f ? 1 : (position.y/fabs(position.y));
+    float yOffset = position.y * self.compressedScale;
+
+    float cca = 1 - self.yScaleCoeff;
+    yOffset += sign * realSpacing * avgInterpolation * cca;
+//    yOffset += position.y * avgInterpolation;
+    position = GLKVector3Make(position.x, yOffset, position.z);
     return position;
 }
 
@@ -90,17 +93,15 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
 
 - (void)updateFoldingRect:(FoldingRect *)foldingRect
 {
-   
-    float compressionCoeff = self.yScaleCoeff;
-    float currentCompressionAmount = self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
+    float compressionScale = self.currentCompressionAmount;
     
     GLKVector3 size = self.size;
     //front face of lattice is at 0 depth
     float leftSide = -.5f * size.x;
     float rightSide = .5f * size.x;
-    float topY = .5f * size.y * currentCompressionAmount;
+    float topY = .5f * size.y * compressionScale;
     float middleY = 0.f;
-    float bottomY = -.5f * size.y * currentCompressionAmount;
+    float bottomY = -.5f * size.y * compressionScale;
     
     float compressedHHeight = (topY - bottomY)/2;
     float uncompressedHHeight = size.y/2;
@@ -138,6 +139,12 @@ float calcCompressionCoeff(float trueY, float compressedScale, float uncompresse
     foldingRect->bottomRight2 = createVert(bottomRightVector, bottomNormal, bottomRightTextCoord);
     
     
+}
+
+- (float)currentCompressionAmount
+{
+    float compressionCoeff = self.yScaleCoeff;
+    return self.compressedScale + (self.uncompressedScale - self.compressedScale) * compressionCoeff;
 }
 
 - (void)updateVerticies:(VertexBuffer *)vertexBuffer
